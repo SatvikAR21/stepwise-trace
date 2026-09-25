@@ -6,7 +6,7 @@ from enum import StrEnum
 from functools import lru_cache
 from pathlib import Path
 
-from pydantic import SecretStr, field_validator
+from pydantic import Field, SecretStr, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 BACKEND_DIR = Path(__file__).resolve().parents[2]
@@ -53,9 +53,15 @@ class Settings(BaseSettings):
 
     llm_provider: LLMProvider = LLMProvider.MOCK
     llm_api_key: SecretStr | None = None
-    llm_model: str = "gemini-2.5-flash"
+    llm_model: str = "gemini-3.5-flash"
     llm_base_url: str | None = None
+    llm_temperature: float = Field(default=0.0, ge=0.0, le=2.0)
+    llm_timeout_s: float = Field(default=60.0, gt=0)
+    llm_max_retries: int = Field(default=3, ge=0)
 
+    intake_max_chars: int = Field(default=6000, gt=0)
+
+    data_dir: Path = Path("backend/data")
     traces_dir: Path = Path("traces")
     database_path: Path = Path("backend/failure_forensics.db")
 
@@ -72,7 +78,7 @@ class Settings(BaseSettings):
     def _empty_to_none(cls, value: object) -> object:
         return None if isinstance(value, str) and not value.strip() else value
 
-    @field_validator("traces_dir", "database_path")
+    @field_validator("data_dir", "traces_dir", "database_path")
     @classmethod
     def _resolve_against_repo_root(cls, value: Path) -> Path:
         return value if value.is_absolute() else (REPO_ROOT / value).resolve()

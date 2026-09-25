@@ -9,6 +9,7 @@ dependencies = [
     "pydantic>=2.8",
     "pydantic-settings>=2.4",
     "structlog>=24.4",
+    "openai>=3.19.2",
 ]
 
 [dependency-groups]
@@ -66,7 +67,8 @@ warn_required_dynamic_aliases = true
 # ---------------------------------------------------------------- pytest
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "-ra --strict-markers --cov=app --cov-report=term-missing --cov-fail-under=80"
+addopts = "-ra --strict-markers -m 'not live' --cov=app --cov-report=term-missing --cov-fail-under=80"
+markers = ["live: calls a real LLM API; needs LLM_API_KEY in .env (run: pytest -m live --no-cov)"]
 
 [tool.coverage.run]
 branch = true

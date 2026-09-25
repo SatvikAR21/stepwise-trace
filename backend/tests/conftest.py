@@ -8,7 +8,9 @@ from pathlib import Path
 import pytest
 from fastapi.testclient import TestClient
 
-from app.core.config import AppEnv, Settings, get_settings
+from app.core.config import BACKEND_DIR, AppEnv, Settings, get_settings
+from app.llm.factory import MOCK_SCRIPTS_SUBDIR
+from app.llm.mock import MockLLMClient
 from app.main import create_app
 
 
@@ -23,6 +25,11 @@ def _isolate_env(monkeypatch: pytest.MonkeyPatch) -> Iterator[None]:
         "LLM_API_KEY",
         "LLM_MODEL",
         "LLM_BASE_URL",
+        "LLM_TEMPERATURE",
+        "LLM_TIMEOUT_S",
+        "LLM_MAX_RETRIES",
+        "INTAKE_MAX_CHARS",
+        "DATA_DIR",
         "TRACES_DIR",
         "DATABASE_PATH",
     ):
@@ -30,6 +37,18 @@ def _isolate_env(monkeypatch: pytest.MonkeyPatch) -> Iterator[None]:
     get_settings.cache_clear()
     yield
     get_settings.cache_clear()
+
+
+@pytest.fixture
+def data_dir() -> Path:
+    """The real sample-data directory (documents + mock scripts), independent of any .env."""
+    return BACKEND_DIR / "data"
+
+
+@pytest.fixture
+def corpus_llm(data_dir: Path) -> MockLLMClient:
+    """Mock client that replays the scripted responses for the sample corpus."""
+    return MockLLMClient(scripts_dir=data_dir / MOCK_SCRIPTS_SUBDIR)
 
 
 @pytest.fixture
