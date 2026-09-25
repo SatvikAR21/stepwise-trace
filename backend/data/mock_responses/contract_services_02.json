@@ -1,0 +1,49 @@
+{
+  "extraction": {
+    "people": [
+      {"name": "Marcus Webb", "role": "Chief Operating Officer, Northwind Logistics Ltd."},
+      {"name": "Elena Petrova", "role": "VP of Customer Success, Cobalt Software Solutions Inc."}
+    ],
+    "organizations": [
+      {"name": "Northwind Logistics Ltd.", "role": "Client"},
+      {"name": "Cobalt Software Solutions Inc.", "role": "Provider"}
+    ],
+    "dates": [
+      {"raw": "January 15, 2025", "iso_date": "2025-01-15", "context": "Agreement date"},
+      {"raw": "February 1, 2025", "iso_date": "2025-02-01", "context": "Start of initial term"},
+      {"raw": "January 31, 2026", "iso_date": "2026-01-31", "context": "End of initial term"}
+    ],
+    "amounts": [
+      {"raw": "$18,500.00", "value": 18500.00, "currency": "USD", "context": "Fixed monthly fee"}
+    ],
+    "key_terms": [
+      "fleet-tracking platform support",
+      "99.9% monthly uptime",
+      "5% service credit",
+      "automatic one-year renewal",
+      "60 days' written notice",
+      "30-day cure period"
+    ]
+  },
+  "classification": {
+    "document_type": "contract",
+    "rationale": "A master services agreement defining services, fees, service levels, term and termination between a client and a provider."
+  },
+  "summarization": {
+    "document_type": "contract",
+    "headline": "Cobalt Software Solutions will support Northwind Logistics' fleet-tracking platform for $18,500 per month.",
+    "key_points": [
+      "Fixed fee of $18,500.00 per month, payable within 30 days of invoice.",
+      "99.9% uptime guarantee with 5% service credit per percentage point missed.",
+      "Initial term February 1, 2025 to January 31, 2026, renewing yearly."
+    ],
+    "parties": ["Northwind Logistics Ltd.", "Cobalt Software Solutions Inc."],
+    "effective_date": "2025-01-15",
+    "term": "February 1, 2025 to January 31, 2026; renews automatically for one-year periods",
+    "key_obligations": [
+      "Provider maintains the platform with 24/7 incident response and monthly releases",
+      "Client pays $18,500.00 per month within 30 days of invoice"
+    ],
+    "termination_terms": "Non-renewal with 60 days' written notice; termination for material breach not cured within 30 days."
+  }
+}

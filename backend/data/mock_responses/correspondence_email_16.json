@@ -1,0 +1,42 @@
+{
+  "extraction": {
+    "people": [
+      {"name": "Olivia Grant", "role": "Event Coordinator, Tidewater Events"},
+      {"name": "Ben Carter", "role": "Recipient, Northlight Media"}
+    ],
+    "organizations": [
+      {"name": "Tidewater Events", "role": "Venue / event organizer"},
+      {"name": "Northlight Media", "role": "Client"}
+    ],
+    "dates": [
+      {"raw": "November 4, 2025", "iso_date": "2025-11-04", "context": "Email date"},
+      {"raw": "November 12, 2025", "iso_date": "2025-11-12", "context": "Proposed venue walkthrough"},
+      {"raw": "November 10, 2025", "iso_date": "2025-11-10", "context": "Deadline for AV requirements"},
+      {"raw": "November 15, 2025", "iso_date": "2025-11-15", "context": "Remaining deposit due"}
+    ],
+    "amounts": [
+      {"raw": "$5,000.00", "value": 5000.00, "currency": "USD", "context": "Remaining deposit"}
+    ],
+    "key_terms": ["venue walkthrough", "product launch", "AV requirements", "remaining deposit"]
+  },
+  "classification": {
+    "document_type": "correspondence",
+    "rationale": "An email between two people coordinating an event walkthrough and reminding about deadlines."
+  },
+  "summarization": {
+    "document_type": "correspondence",
+    "headline": "Tidewater Events asks Northlight Media to schedule a venue walkthrough and confirm AV needs before the launch.",
+    "key_points": [
+      "Walkthrough proposed for November 12, 2025 at 10:00 AM.",
+      "Remaining $5,000.00 deposit due November 15, 2025."
+    ],
+    "sender": "Olivia Grant, Tidewater Events",
+    "recipient": "Ben Carter, Northlight Media",
+    "purpose": "Schedule a venue walkthrough and collect AV requirements",
+    "action_items": [
+      "Confirm the November 12, 2025 walkthrough",
+      "Send final AV requirements by November 10, 2025",
+      "Pay the remaining $5,000.00 deposit by November 15, 2025"
+    ]
+  }
+}

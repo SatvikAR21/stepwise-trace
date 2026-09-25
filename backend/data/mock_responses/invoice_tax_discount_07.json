@@ -1,0 +1,41 @@
+{
+  "extraction": {
+    "people": [
+      {"name": "Jordan Blake", "role": "Billing contact"}
+    ],
+    "organizations": [
+      {"name": "Pixel & Pine Design Studio", "role": "Vendor"},
+      {"name": "Summit Outdoor Gear Ltd.", "role": "Customer"}
+    ],
+    "dates": [
+      {"raw": "July 3, 2025", "iso_date": "2025-07-03", "context": "Invoice date"},
+      {"raw": "August 2, 2025", "iso_date": "2025-08-02", "context": "Due date"}
+    ],
+    "amounts": [
+      {"raw": "$6,950.00", "value": 6950.00, "currency": "USD", "context": "Subtotal"},
+      {"raw": "-$695.00", "value": -695.00, "currency": "USD", "context": "Loyalty discount (10%)"},
+      {"raw": "$500.40", "value": 500.40, "currency": "USD", "context": "Sales tax (8%)"},
+      {"raw": "$6,755.40", "value": 6755.40, "currency": "USD", "context": "Total due"}
+    ],
+    "key_terms": ["INV-7781", "brand identity refresh", "loyalty discount", "sales tax", "bank transfer"]
+  },
+  "classification": {
+    "document_type": "invoice",
+    "rationale": "An invoice for design services with hourly line items, discount, tax and a total due."
+  },
+  "summarization": {
+    "document_type": "invoice",
+    "headline": "Pixel & Pine Design Studio invoices Summit Outdoor Gear $6,755.40 for design work, due August 2, 2025.",
+    "key_points": [
+      "Subtotal $6,950.00 less a 10% loyalty discount of $695.00.",
+      "8% sales tax of $500.40 applied after the discount.",
+      "Payment by bank transfer."
+    ],
+    "vendor": "Pixel & Pine Design Studio",
+    "customer": "Summit Outdoor Gear Ltd.",
+    "invoice_number": "INV-7781",
+    "total_amount": {"raw": "$6,755.40", "value": 6755.40, "currency": "USD", "context": "Total due"},
+    "due_date": "2025-08-02",
+    "line_item_count": 3
+  }
+}

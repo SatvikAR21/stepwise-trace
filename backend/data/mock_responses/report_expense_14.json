@@ -1,0 +1,40 @@
+{
+  "_comment": "INTENDED FAILURE (misclassification): an expense report that explicitly is not a payment request is classified as an invoice; the summary then takes the invoice shape.",
+  "extraction": {
+    "people": [
+      {"name": "Nina Sokolova", "role": "Regional Sales Manager"}
+    ],
+    "organizations": [
+      {"name": "Harlow Medical Devices", "role": "Reporting company"},
+      {"name": "Mercy Hospital", "role": "Client"}
+    ],
+    "dates": [
+      {"raw": "Aug 4", "iso_date": "2025-08-04", "context": "Flight and start of Denver trip"},
+      {"raw": "Aug 21", "iso_date": "2025-08-21", "context": "MedTech Expo registration"}
+    ],
+    "amounts": [
+      {"raw": "$1,983.50", "value": 1983.50, "currency": "USD", "context": "Total expenses for August"},
+      {"raw": "$2,500.00", "value": 2500.00, "currency": "USD", "context": "Budget for August"},
+      {"raw": "$516.50", "value": 516.50, "currency": "USD", "context": "Under-budget variance"}
+    ],
+    "key_terms": ["travel and expense report", "budget tracking", "21% below budget", "not a request for payment"]
+  },
+  "classification": {
+    "document_type": "invoice",
+    "rationale": "The document lists itemised charges with dates and amounts and states a total, which is typical of an invoice."
+  },
+  "summarization": {
+    "document_type": "invoice",
+    "headline": "Harlow Medical Devices field sales submits charges totalling $1,983.50 to the Finance Department.",
+    "key_points": [
+      "Five itemised travel charges in August 2025.",
+      "Total amount $1,983.50."
+    ],
+    "vendor": "Harlow Medical Devices",
+    "customer": "Finance Department",
+    "invoice_number": null,
+    "total_amount": {"raw": "$1,983.50", "value": 1983.50, "currency": "USD", "context": "Total"},
+    "due_date": null,
+    "line_item_count": 5
+  }
+}

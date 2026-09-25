@@ -1,0 +1,50 @@
+{
+  "_comment": "INTENDED FAILURE (context_loss at summarization): extraction captures the $150,000.00 early termination penalty, but the summary omits it.",
+  "extraction": {
+    "people": [
+      {"name": "Hannah Liu", "role": "CFO, Orion Retail Group"},
+      {"name": "Tomas Ortega", "role": "General Counsel, Vantage Cloud Systems Inc."}
+    ],
+    "organizations": [
+      {"name": "Vantage Cloud Systems Inc.", "role": "Licensor"},
+      {"name": "Orion Retail Group", "role": "Licensee"}
+    ],
+    "dates": [
+      {"raw": "June 1, 2025", "iso_date": "2025-06-01", "context": "Effective Date"}
+    ],
+    "amounts": [
+      {"raw": "$96,000.00", "value": 96000.00, "currency": "USD", "context": "Annual license fee"},
+      {"raw": "$150,000.00", "value": 150000.00, "currency": "USD", "context": "Early termination penalty"}
+    ],
+    "key_terms": [
+      "Vantage Inventory Suite license",
+      "250 named users",
+      "three-year initial term",
+      "early termination penalty",
+      "4-hour critical response",
+      "data return within 30 days"
+    ]
+  },
+  "classification": {
+    "document_type": "contract",
+    "rationale": "A software license and support agreement between a licensor and a licensee with fees, term and termination provisions."
+  },
+  "summarization": {
+    "document_type": "contract",
+    "headline": "Three-year license of the Vantage Inventory Suite to Orion Retail Group for $96,000 per year.",
+    "key_points": [
+      "Effective June 1, 2025 for three years.",
+      "Up to 250 named users.",
+      "Business-hours support with 4-hour critical response."
+    ],
+    "parties": ["Vantage Cloud Systems Inc.", "Orion Retail Group"],
+    "effective_date": "2025-06-01",
+    "term": "Three years from June 1, 2025",
+    "key_obligations": [
+      "Licensee pays $96,000.00 annually in advance",
+      "Licensor provides business-hours support",
+      "Licensor returns data within 30 days of termination and deletes copies within 90 days"
+    ],
+    "termination_terms": "Licensor may terminate immediately if a fee is unpaid 45 days after its due date."
+  }
+}

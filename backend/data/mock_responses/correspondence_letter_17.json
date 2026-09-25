@@ -1,0 +1,40 @@
+{
+  "extraction": {
+    "people": [
+      {"name": "Aisha Rahman", "role": "Admitted applicant"},
+      {"name": "Henry Lindqvist", "role": "Director of Graduate Admissions"}
+    ],
+    "organizations": [
+      {"name": "Westbrook University", "role": "Sender"}
+    ],
+    "dates": [
+      {"raw": "October 20, 2025", "iso_date": "2025-10-20", "context": "Letter date"},
+      {"raw": "January 12, 2026", "iso_date": "2026-01-12", "context": "Program start"},
+      {"raw": "November 30, 2025", "iso_date": "2025-11-30", "context": "Acceptance and deposit deadline"}
+    ],
+    "amounts": [
+      {"raw": "$12,000", "value": 12000, "currency": "USD", "context": "Dean's Merit Scholarship per year"},
+      {"raw": "$500", "value": 500, "currency": "USD", "context": "Enrollment deposit"}
+    ],
+    "key_terms": ["admission offer", "Master of Science in Data Science", "Dean's Merit Scholarship", "enrollment deposit"]
+  },
+  "classification": {
+    "document_type": "correspondence",
+    "rationale": "A formal letter from a university to an applicant offering admission."
+  },
+  "summarization": {
+    "document_type": "correspondence",
+    "headline": "Westbrook University offers Aisha Rahman admission to its MS in Data Science with a $12,000-a-year scholarship.",
+    "key_points": [
+      "Program begins January 12, 2026.",
+      "Scholarship renewable for year two subject to academic progress."
+    ],
+    "sender": "Henry Lindqvist, Westbrook University",
+    "recipient": "Aisha Rahman",
+    "purpose": "Offer of admission and scholarship",
+    "action_items": [
+      "Complete the online enrollment form",
+      "Pay the $500 enrollment deposit by November 30, 2025"
+    ]
+  }
+}

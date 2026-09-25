@@ -1,0 +1,42 @@
+{
+  "_comment": "INTENDED FAILURE (misclassification): a binding contract amendment written in letter form is classified as correspondence, so the summary misses its contractual nature.",
+  "extraction": {
+    "people": [
+      {"name": "Arjun Mehta", "role": "Operations Director, Solent Conference Centre"},
+      {"name": "Charlotte Evans", "role": "Managing Director, Harborview Catering Ltd."}
+    ],
+    "organizations": [
+      {"name": "Harborview Catering Ltd.", "role": "Caterer"},
+      {"name": "Solent Conference Centre", "role": "Client"}
+    ],
+    "dates": [
+      {"raw": "September 2, 2025", "iso_date": "2025-09-02", "context": "Letter date"},
+      {"raw": "March 1, 2024", "iso_date": "2024-03-01", "context": "Original Catering Services Agreement date"},
+      {"raw": "October 1, 2025", "iso_date": "2025-10-01", "context": "Amendment effective date"},
+      {"raw": "September 20, 2025", "iso_date": "2025-09-20", "context": "Countersignature deadline"}
+    ],
+    "amounts": [
+      {"raw": "GBP 18.50", "value": 18.50, "currency": "GBP", "context": "Previous per-guest lunch rate"},
+      {"raw": "GBP 21.00", "value": 21.00, "currency": "GBP", "context": "New per-guest lunch rate"}
+    ],
+    "key_terms": ["Amendment No. 1", "Catering Services Agreement", "per-guest rate increase", "7-day guest confirmation", "countersignature"]
+  },
+  "classification": {
+    "document_type": "correspondence",
+    "rationale": "Written as a business letter from one company to another following up on a phone call; its main purpose is communication."
+  },
+  "summarization": {
+    "document_type": "correspondence",
+    "headline": "Harborview Catering writes to Solent Conference Centre following up on a call about catering arrangements.",
+    "key_points": [
+      "Lunch pricing and guest-number notice period discussed.",
+      "A reply is requested by September 20, 2025."
+    ],
+    "sender": "Charlotte Evans, Harborview Catering Ltd.",
+    "recipient": "Arjun Mehta, Solent Conference Centre",
+    "purpose": "Follow up on a recent phone call",
+    "action_items": [
+      "Sign and return a copy by September 20, 2025"
+    ]
+  }
+}

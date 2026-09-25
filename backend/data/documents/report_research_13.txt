@@ -1,0 +1,23 @@
+RESEARCH BRIEF: Remote Work and Employee Retention
+
+Prepared for: Human Resources Leadership Team, Crestline Manufacturing
+Prepared by: Dr. Amara Nwosu, People Analytics
+Published: September 5, 2025
+
+Objective
+To determine whether flexible remote-work eligibility is associated with lower voluntary turnover among salaried staff.
+
+Method
+We compared 1,240 salaried employees across 14 sites over 18 months, controlling for tenure, role level and salary band.
+
+Findings
+- Employees eligible for two or more remote days per week had 27% lower voluntary turnover.
+- The effect was strongest for employees with under three years of tenure.
+- No measurable difference in performance ratings was found between groups.
+- Replacing a salaried employee costs an estimated $38,000 on average.
+
+Recommendations
+1. Extend two-day remote eligibility to all salaried roles where on-site presence is not essential.
+2. Re-evaluate retention figures after 12 months.
+
+Limitations: observational data; results show association, not causation.

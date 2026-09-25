@@ -1,0 +1,44 @@
+{
+  "_comment": "INTENDED FAILURE (extraction_hallucination): the document contains no dates, but extraction invents 'January 1, 2024' as the effective date and the summary repeats it.",
+  "extraction": {
+    "people": [],
+    "organizations": [
+      {"name": "Meridian Health Partners", "role": "Company"},
+      {"name": "Alder Strategy Group", "role": "Consultant"}
+    ],
+    "dates": [
+      {"raw": "January 1, 2024", "iso_date": "2024-01-01", "context": "Effective date of the agreement"}
+    ],
+    "amounts": [
+      {"raw": "$42,000.00", "value": 42000.00, "currency": "USD", "context": "Total engagement fee"}
+    ],
+    "key_terms": [
+      "patient-intake workflow assessment",
+      "50% upon signature, 50% upon final report",
+      "fourteen days' written notice",
+      "confidentiality of patient information"
+    ]
+  },
+  "classification": {
+    "document_type": "contract",
+    "rationale": "A consulting agreement between a company and a consultant with compensation, duration, confidentiality and termination clauses."
+  },
+  "summarization": {
+    "document_type": "contract",
+    "headline": "Alder Strategy Group will assess Meridian Health Partners' patient-intake workflow for $42,000, effective January 1, 2024.",
+    "key_points": [
+      "Agreement effective January 1, 2024.",
+      "Fee of $42,000.00, paid half at signature and half on delivery of the final report.",
+      "Either party may terminate with fourteen days' notice."
+    ],
+    "parties": ["Meridian Health Partners", "Alder Strategy Group"],
+    "effective_date": "2024-01-01",
+    "term": "Until acceptance of the final report",
+    "key_obligations": [
+      "Consultant assesses the patient-intake workflow and recommends improvements",
+      "Consultant keeps patient and business information confidential",
+      "Company pays $42,000.00 in two instalments"
+    ],
+    "termination_terms": "Either party may terminate with fourteen days' written notice; fees for completed work remain payable."
+  }
+}

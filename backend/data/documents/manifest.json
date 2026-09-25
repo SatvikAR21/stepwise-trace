@@ -1,0 +1,168 @@
+{
+  "version": 1,
+  "documents": [
+    {
+      "doc_id": "contract_nda_01",
+      "file": "contract_nda_01.md",
+      "format": "markdown",
+      "expected_type": "contract",
+      "description": "Mutual NDA with a clear effective date, term and signatories."
+    },
+    {
+      "doc_id": "contract_services_02",
+      "file": "contract_services_02.txt",
+      "format": "text",
+      "expected_type": "contract",
+      "description": "Master services agreement with monthly fee, SLA credits and auto-renewal."
+    },
+    {
+      "doc_id": "contract_lease_03",
+      "file": "contract_lease_03.txt",
+      "format": "pdf_text",
+      "expected_type": "contract",
+      "description": "Commercial lease converted from PDF: page markers and hyphenated line breaks."
+    },
+    {
+      "doc_id": "contract_no_dates_04",
+      "file": "contract_no_dates_04.txt",
+      "format": "text",
+      "expected_type": "contract",
+      "intended_failure": "extraction_hallucination",
+      "failing_step": "extraction",
+      "description": "SPEC CASE: contract with no dates at all. Extraction invents an effective date (2024-01-01) that the summary then repeats."
+    },
+    {
+      "doc_id": "contract_license_penalty_05",
+      "file": "contract_license_penalty_05.md",
+      "format": "markdown",
+      "expected_type": "contract",
+      "intended_failure": "context_loss",
+      "failing_step": "summarization",
+      "description": "License with a $150,000 early-termination penalty. Extraction captures it; the summary drops it."
+    },
+    {
+      "doc_id": "invoice_simple_06",
+      "file": "invoice_simple_06.txt",
+      "format": "text",
+      "expected_type": "invoice",
+      "description": "Plain single-currency invoice with three line items."
+    },
+    {
+      "doc_id": "invoice_tax_discount_07",
+      "file": "invoice_tax_discount_07.md",
+      "format": "markdown",
+      "expected_type": "invoice",
+      "description": "Markdown invoice with a table, a negative discount line and sales tax."
+    },
+    {
+      "doc_id": "invoice_scanned_08",
+      "file": "invoice_scanned_08.txt",
+      "format": "pdf_text",
+      "expected_type": "invoice",
+      "description": "Scanned invoice text: uppercase header, US date format, dot leaders, hyphenated break."
+    },
+    {
+      "doc_id": "invoice_multi_currency_09",
+      "file": "invoice_multi_currency_09.txt",
+      "format": "text",
+      "expected_type": "invoice",
+      "intended_failure": "propagation_error",
+      "failing_step": "summarization",
+      "description": "SPEC CASE: line items in EUR, GBP and USD. Extraction is correct; the summary adds them into one 'USD 8,350.00' total."
+    },
+    {
+      "doc_id": "invoice_utility_10",
+      "file": "invoice_utility_10.txt",
+      "format": "text",
+      "expected_type": "invoice",
+      "description": "Utility bill styled as an account statement, with a late-fee clause."
+    },
+    {
+      "doc_id": "report_quarterly_11",
+      "file": "report_quarterly_11.md",
+      "format": "markdown",
+      "expected_type": "report",
+      "description": "Quarterly sales report with metrics, findings and recommendations."
+    },
+    {
+      "doc_id": "report_postmortem_12",
+      "file": "report_postmortem_12.txt",
+      "format": "text",
+      "expected_type": "report",
+      "description": "Engineering incident postmortem with timeline and action items."
+    },
+    {
+      "doc_id": "report_research_13",
+      "file": "report_research_13.txt",
+      "format": "text",
+      "expected_type": "report",
+      "description": "HR research brief with method, findings and limitations."
+    },
+    {
+      "doc_id": "report_expense_14",
+      "file": "report_expense_14.txt",
+      "format": "text",
+      "expected_type": "report",
+      "intended_failure": "misclassification",
+      "failing_step": "classification",
+      "description": "Expense report that looks like an invoice (itemised amounts, total) but explicitly is not a payment request. Classified as invoice."
+    },
+    {
+      "doc_id": "report_supplier_risk_long_15",
+      "file": "report_supplier_risk_long_15.md",
+      "format": "markdown",
+      "expected_type": "report",
+      "intended_failure": "context_loss",
+      "failing_step": "intake",
+      "description": "Long report whose critical finding (Salmonella, suspend supplier) sits after the INTAKE_MAX_CHARS cut-off. The summary calls the supplier base healthy."
+    },
+    {
+      "doc_id": "correspondence_email_16",
+      "file": "correspondence_email_16.txt",
+      "format": "text",
+      "expected_type": "correspondence",
+      "description": "Event-planning email with several deadlines and a deposit reminder."
+    },
+    {
+      "doc_id": "correspondence_letter_17",
+      "file": "correspondence_letter_17.txt",
+      "format": "text",
+      "expected_type": "correspondence",
+      "description": "University admission offer letter with a scholarship and a deposit deadline."
+    },
+    {
+      "doc_id": "correspondence_complaint_18",
+      "file": "correspondence_complaint_18.txt",
+      "format": "text",
+      "expected_type": "correspondence",
+      "description": "Customer complaint about a damaged delivery, requesting replacement or refund."
+    },
+    {
+      "doc_id": "correspondence_unnamed_ceo_19",
+      "file": "correspondence_unnamed_ceo_19.txt",
+      "format": "text",
+      "expected_type": "correspondence",
+      "intended_failure": "extraction_hallucination",
+      "failing_step": "extraction",
+      "description": "Letter from 'the CEO' who is never named (and is referred to as 'she'). Extraction invents 'John Smith' as CEO."
+    },
+    {
+      "doc_id": "ambiguous_amendment_letter_20",
+      "file": "ambiguous_amendment_letter_20.txt",
+      "format": "text",
+      "expected_type": "contract",
+      "intended_failure": "misclassification",
+      "failing_step": "classification",
+      "description": "SPEC CASE (ambiguous): written as a letter but is a binding contract amendment with a countersignature block. Classified as correspondence."
+    },
+    {
+      "doc_id": "ambiguous_prompt_injection_21",
+      "file": "ambiguous_prompt_injection_21.txt",
+      "format": "text",
+      "expected_type": "correspondence",
+      "intended_failure": "prompt_failure",
+      "failing_step": "classification",
+      "description": "Internal email containing an embedded 'ignore previous instructions' note. The classifier obeys it and labels it an invoice."
+    }
+  ]
+}

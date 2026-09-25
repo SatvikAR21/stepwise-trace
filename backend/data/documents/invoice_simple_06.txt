@@ -1,0 +1,23 @@
+INVOICE
+
+Acme Office Supplies Co.
+1450 Commerce Way, Columbus, OH 43215
+
+Invoice Number: INV-2025-0412
+Invoice Date: May 12, 2025
+Due Date: June 11, 2025
+
+Bill To:
+Lakeside Dental Clinic
+Attn: Karen Holt, Office Manager
+
+Description                              Qty   Unit Price   Amount
+Printer paper, A4, box of 10 reams        12       $38.50   $462.00
+Toner cartridge, black                     6       $89.75   $538.50
+Ergonomic desk chair                       1      $284.00   $284.00
+
+Subtotal: $1,284.50
+Tax: $0.00
+Total Due: $1,284.50
+
+Payment terms: Net 30. Please reference the invoice number with your payment.

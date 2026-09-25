@@ -1,0 +1,39 @@
+{
+  "extraction": {
+    "people": [
+      {"name": "Luis Ferreira", "role": "Service Manager, Bluewater Marine Services"}
+    ],
+    "organizations": [
+      {"name": "Bluewater Marine Services", "role": "Vendor"},
+      {"name": "Coastal Ferry Authority", "role": "Customer"}
+    ],
+    "dates": [
+      {"raw": "09/15/2025", "iso_date": "2025-09-15", "context": "Invoice date"}
+    ],
+    "amounts": [
+      {"raw": "$3,200.00", "value": 3200.00, "currency": "USD", "context": "Hull inspection and cleaning"},
+      {"raw": "$2,450.00", "value": 2450.00, "currency": "USD", "context": "Propeller shaft realignment"},
+      {"raw": "$875.00", "value": 875.00, "currency": "USD", "context": "Safety equipment certification"},
+      {"raw": "$6,525.00", "value": 6525.00, "currency": "USD", "context": "Total amount due"}
+    ],
+    "key_terms": ["BW-30219", "MV Island Spirit", "hull inspection", "payment within 15 days"]
+  },
+  "classification": {
+    "document_type": "invoice",
+    "rationale": "An invoice for marine services rendered, with an invoice number, itemised charges and a total amount due."
+  },
+  "summarization": {
+    "document_type": "invoice",
+    "headline": "Bluewater Marine Services invoices Coastal Ferry Authority $6,525.00 for maintenance on MV Island Spirit.",
+    "key_points": [
+      "Three services: hull inspection, propeller shaft realignment and safety certification.",
+      "Payment due within 15 days of the invoice date."
+    ],
+    "vendor": "Bluewater Marine Services",
+    "customer": "Coastal Ferry Authority",
+    "invoice_number": "BW-30219",
+    "total_amount": {"raw": "$6,525.00", "value": 6525.00, "currency": "USD", "context": "Total amount due"},
+    "due_date": null,
+    "line_item_count": 3
+  }
+}

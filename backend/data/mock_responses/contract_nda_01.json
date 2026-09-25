@@ -1,0 +1,47 @@
+{
+  "extraction": {
+    "people": [
+      {"name": "Priya Raman", "role": "Chief Executive Officer, Brightline Analytics Inc."},
+      {"name": "Daniel Okafor", "role": "Managing Partner, Harbor & Finch LLP"}
+    ],
+    "organizations": [
+      {"name": "Brightline Analytics Inc.", "role": "Party (Delaware corporation)"},
+      {"name": "Harbor & Finch LLP", "role": "Party (New York limited liability partnership)"}
+    ],
+    "dates": [
+      {"raw": "March 3, 2025", "iso_date": "2025-03-03", "context": "Effective Date"}
+    ],
+    "amounts": [],
+    "key_terms": [
+      "mutual non-disclosure",
+      "confidential information",
+      "two-year term",
+      "three-year survival of confidentiality",
+      "injunctive relief",
+      "New York governing law"
+    ]
+  },
+  "classification": {
+    "document_type": "contract",
+    "rationale": "A mutual NDA between two named parties with obligations, a defined term, remedies and signatures."
+  },
+  "summarization": {
+    "document_type": "contract",
+    "headline": "Two-year mutual NDA between Brightline Analytics and Harbor & Finch to evaluate a data-analytics partnership.",
+    "key_points": [
+      "Effective March 3, 2025.",
+      "Confidential information may be used only to evaluate the partnership.",
+      "Confidentiality survives three years after termination.",
+      "Governed by New York law."
+    ],
+    "parties": ["Brightline Analytics Inc.", "Harbor & Finch LLP"],
+    "effective_date": "2025-03-03",
+    "term": "Two years from the Effective Date",
+    "key_obligations": [
+      "Keep the other party's Confidential Information strictly confidential",
+      "Use it solely for the Purpose",
+      "Limit access to employees with a need to know"
+    ],
+    "termination_terms": "Expires after two years; confidentiality obligations survive for three years after termination."
+  }
+}

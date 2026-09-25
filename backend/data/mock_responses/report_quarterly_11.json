@@ -1,0 +1,42 @@
+{
+  "extraction": {
+    "people": [
+      {"name": "Grace Mendoza", "role": "Director of Revenue Operations"}
+    ],
+    "organizations": [
+      {"name": "Lumen Home Appliances", "role": "Reporting company"}
+    ],
+    "dates": [
+      {"raw": "July 10, 2025", "iso_date": "2025-07-10", "context": "Report date"}
+    ],
+    "amounts": [
+      {"raw": "$12.4 million", "value": 12400000, "currency": "USD", "context": "Q2 revenue"},
+      {"raw": "$612", "value": 612, "currency": "USD", "context": "Average order value"},
+      {"raw": "$3.1 million", "value": 3100000, "currency": "USD", "context": "SmartCool Q2 revenue"}
+    ],
+    "key_terms": ["Q2 revenue growth", "SmartCool refrigerator line", "online sales", "retail partner decline", "customer acquisition cost"]
+  },
+  "classification": {
+    "document_type": "report",
+    "rationale": "An analytical sales report presenting metrics, findings and recommendations."
+  },
+  "summarization": {
+    "document_type": "report",
+    "headline": "Lumen Home Appliances grew Q2 2025 revenue to $12.4 million, led by the new SmartCool line.",
+    "key_points": [
+      "Revenue up 8% quarter over quarter and 15% year over year.",
+      "Online sales grew 22% and are now 41% of revenue."
+    ],
+    "title": "Q2 2025 Sales Performance Report",
+    "key_findings": [
+      "SmartCool generated $3.1 million in its first full quarter",
+      "Retail partner sales fell 3%, concentrated in the Midwest",
+      "Customer acquisition cost rose 11% due to digital advertising prices"
+    ],
+    "recommendations": [
+      "Expand SmartCool marketing into Canada in Q3",
+      "Renegotiate co-marketing terms with two underperforming retail chains",
+      "Shift 10% of paid-search budget to email retention"
+    ]
+  }
+}

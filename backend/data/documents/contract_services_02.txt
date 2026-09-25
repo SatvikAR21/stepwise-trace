@@ -1,0 +1,18 @@
+MASTER SERVICES AGREEMENT
+
+Agreement No. MSA-2025-117
+
+This Master Services Agreement is made on January 15, 2025 between Northwind Logistics Ltd. ("Client") and Cobalt Software Solutions Inc. ("Provider").
+
+1. SERVICES. Provider will maintain and support Client's fleet-tracking platform, including 24/7 incident response and monthly feature releases.
+
+2. FEES. Client shall pay Provider a fixed fee of $18,500.00 per month, invoiced on the first business day of each month and payable within 30 days.
+
+3. SERVICE LEVELS. Provider guarantees 99.9% monthly uptime. For each full percentage point below that target, Client receives a service credit of 5% of the monthly fee.
+
+4. TERM. The initial term runs from February 1, 2025 to January 31, 2026 and renews automatically for successive one-year periods unless either party gives 60 days' written notice.
+
+5. TERMINATION. Either party may terminate for material breach not cured within 30 days of written notice.
+
+Client: Northwind Logistics Ltd., by Marcus Webb, Chief Operating Officer
+Provider: Cobalt Software Solutions Inc., by Elena Petrova, VP of Customer Success

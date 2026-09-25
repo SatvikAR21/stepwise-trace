@@ -1,0 +1,40 @@
+{
+  "_comment": "INTENDED FAILURE (propagation_error at summarization): extraction keeps EUR/GBP/USD separate, but the summary adds them into a single 'USD 8,350.00' total that appears nowhere in the document.",
+  "extraction": {
+    "people": [
+      {"name": "Anja Keller", "role": "Accounts Receivable"}
+    ],
+    "organizations": [
+      {"name": "Northstar Translation Services GmbH", "role": "Vendor"},
+      {"name": "Everbright Pharmaceuticals plc", "role": "Client"}
+    ],
+    "dates": [
+      {"raw": "August 20, 2025", "iso_date": "2025-08-20", "context": "Invoice date"},
+      {"raw": "September 19, 2025", "iso_date": "2025-09-19", "context": "Payment due"}
+    ],
+    "amounts": [
+      {"raw": "EUR 4,200.00", "value": 4200.00, "currency": "EUR", "context": "German regulatory dossier translation"},
+      {"raw": "GBP 1,850.00", "value": 1850.00, "currency": "GBP", "context": "UK patient leaflet localisation"},
+      {"raw": "USD 2,300.00", "value": 2300.00, "currency": "USD", "context": "US FDA submission proofreading"}
+    ],
+    "key_terms": ["NTS-2025-088", "multi-currency billing", "no currency conversion", "regulatory translation"]
+  },
+  "classification": {
+    "document_type": "invoice",
+    "rationale": "An invoice for translation services with an invoice number, line items, amounts and a payment due date."
+  },
+  "summarization": {
+    "document_type": "invoice",
+    "headline": "Northstar Translation Services invoices Everbright Pharmaceuticals USD 8,350.00 for translation work.",
+    "key_points": [
+      "Total due: USD 8,350.00 by September 19, 2025.",
+      "Three translation and proofreading services."
+    ],
+    "vendor": "Northstar Translation Services GmbH",
+    "customer": "Everbright Pharmaceuticals plc",
+    "invoice_number": "NTS-2025-088",
+    "total_amount": {"raw": "USD 8,350.00", "value": 8350.00, "currency": "USD", "context": "Total of all line items"},
+    "due_date": "2025-09-19",
+    "line_item_count": 3
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "extraction": {
+    "people": [],
+    "organizations": [
+      {"name": "City of Maple Grove", "role": "Utility provider"},
+      {"name": "Patel Family Restaurant LLC", "role": "Account holder"}
+    ],
+    "dates": [
+      {"raw": "September 1, 2025", "iso_date": "2025-09-01", "context": "Billing period start"},
+      {"raw": "September 30, 2025", "iso_date": "2025-09-30", "context": "Billing period end"},
+      {"raw": "October 25, 2025", "iso_date": "2025-10-25", "context": "Due date"}
+    ],
+    "amounts": [
+      {"raw": "$142.60", "value": 142.60, "currency": "USD", "context": "Water usage"},
+      {"raw": "$98.30", "value": 98.30, "currency": "USD", "context": "Sewer charge"},
+      {"raw": "$12.00", "value": 12.00, "currency": "USD", "context": "Stormwater fee"},
+      {"raw": "$252.90", "value": 252.90, "currency": "USD", "context": "Amount due"},
+      {"raw": "$15.00", "value": 15.00, "currency": "USD", "context": "Late fee"}
+    ],
+    "key_terms": ["WS-2025-10-4471", "water and sewer utility", "18,400 gallons", "late fee"]
+  },
+  "classification": {
+    "document_type": "invoice",
+    "rationale": "A utility bill requesting payment of an amount due by a due date for services in a billing period."
+  },
+  "summarization": {
+    "document_type": "invoice",
+    "headline": "City of Maple Grove bills Patel Family Restaurant $252.90 for September 2025 water and sewer service.",
+    "key_points": [
+      "Billing period September 1 to September 30, 2025.",
+      "A $15.00 late fee applies after October 25, 2025."
+    ],
+    "vendor": "City of Maple Grove",
+    "customer": "Patel Family Restaurant LLC",
+    "invoice_number": "WS-2025-10-4471",
+    "total_amount": {"raw": "$252.90", "value": 252.90, "currency": "USD", "context": "Amount due"},
+    "due_date": "2025-10-25",
+    "line_item_count": 3
+  }
+}

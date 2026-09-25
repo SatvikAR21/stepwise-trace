@@ -1,0 +1,23 @@
+INCIDENT POSTMORTEM: Payment API Outage
+
+Incident ID: INC-4471
+Date of incident: October 2, 2025
+Author: Samuel Adeyemi, Site Reliability Engineering Lead
+Organization: Quickpay Financial Technologies
+
+Summary
+Between 14:05 and 15:32 UTC, 38% of card payment requests to the Payment API failed with timeout errors. Approximately 21,000 transactions were affected. Estimated lost processing revenue: $64,000.
+
+Root cause
+A database connection-pool setting was reduced from 200 to 20 during a routine configuration change. Under peak load, requests queued until they timed out.
+
+Timeline
+14:05 Error rate alerts fire.
+14:20 On-call engineer begins investigation.
+15:10 Configuration change identified as cause.
+15:32 Setting restored; error rate returns to normal.
+
+Lessons and action items
+1. Add automated validation for connection-pool settings before deployment.
+2. Alert on connection-pool saturation, not just error rate.
+3. Require a second reviewer for production configuration changes.

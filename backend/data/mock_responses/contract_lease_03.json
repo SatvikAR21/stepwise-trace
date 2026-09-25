@@ -1,0 +1,50 @@
+{
+  "extraction": {
+    "people": [
+      {"name": "Victor Hale", "role": "Managing Member, Riverside Property Holdings LLC"},
+      {"name": "Sofia Marquez", "role": "Owner, Greenleaf Bakery Co."}
+    ],
+    "organizations": [
+      {"name": "Riverside Property Holdings LLC", "role": "Landlord"},
+      {"name": "Greenleaf Bakery Co.", "role": "Tenant"}
+    ],
+    "dates": [
+      {"raw": "April 1, 2025", "iso_date": "2025-04-01", "context": "Lease commencement"},
+      {"raw": "March 31, 2030", "iso_date": "2030-03-31", "context": "Lease end"},
+      {"raw": "March 31, 2027", "iso_date": "2027-03-31", "context": "Earliest early-termination date"}
+    ],
+    "amounts": [
+      {"raw": "$4,750.00", "value": 4750.00, "currency": "USD", "context": "Monthly base rent"},
+      {"raw": "$9,500.00", "value": 9500.00, "currency": "USD", "context": "Security deposit"}
+    ],
+    "key_terms": [
+      "five-year commercial lease",
+      "3% annual rent increase",
+      "retail bakery and cafe use",
+      "early termination fee of three months' base rent",
+      "tenant responsible for interior repairs"
+    ]
+  },
+  "classification": {
+    "document_type": "contract",
+    "rationale": "A commercial lease between a landlord and a tenant with term, rent, deposit and termination provisions."
+  },
+  "summarization": {
+    "document_type": "contract",
+    "headline": "Five-year lease of Unit 4B, 220 Mill Street, Portland to Greenleaf Bakery Co. at $4,750 per month.",
+    "key_points": [
+      "Lease runs April 1, 2025 to March 31, 2030.",
+      "Rent rises 3% on each anniversary.",
+      "Security deposit of $9,500.00."
+    ],
+    "parties": ["Riverside Property Holdings LLC", "Greenleaf Bakery Co."],
+    "effective_date": "2025-04-01",
+    "term": "April 1, 2025 to March 31, 2030",
+    "key_obligations": [
+      "Tenant pays $4,750.00 base rent monthly, increasing 3% annually",
+      "Tenant handles interior repairs; Landlord handles roof, structure and HVAC replacement",
+      "Premises used only as a retail bakery and cafe"
+    ],
+    "termination_terms": "Tenant may terminate after March 31, 2027 with six months' notice and a fee equal to three months' base rent."
+  }
+}

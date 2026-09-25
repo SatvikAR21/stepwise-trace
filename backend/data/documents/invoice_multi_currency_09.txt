@@ -1,0 +1,18 @@
+INVOICE
+
+Northstar Translation Services GmbH
+Invoice No.: NTS-2025-088
+Invoice date: August 20, 2025
+Payment due: September 19, 2025
+
+Client: Everbright Pharmaceuticals plc
+
+Services:
+1. German regulatory dossier translation (Frankfurt office) - EUR 4,200.00
+2. UK patient leaflet localisation (London office) - GBP 1,850.00
+3. US FDA submission proofreading (Boston office) - USD 2,300.00
+
+Each line item is billed in the currency of the delivering office. Amounts are payable separately in the stated currencies; no currency conversion applies.
+
+Bank details are provided per currency on the attached remittance sheet.
+Contact: Anja Keller, Accounts Receivable

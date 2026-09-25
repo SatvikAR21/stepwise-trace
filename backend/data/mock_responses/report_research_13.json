@@ -1,0 +1,40 @@
+{
+  "extraction": {
+    "people": [
+      {"name": "Amara Nwosu", "role": "People Analytics"}
+    ],
+    "organizations": [
+      {"name": "Crestline Manufacturing", "role": "Commissioning organization"}
+    ],
+    "dates": [
+      {"raw": "September 5, 2025", "iso_date": "2025-09-05", "context": "Publication date"}
+    ],
+    "amounts": [
+      {"raw": "$38,000", "value": 38000, "currency": "USD", "context": "Average cost of replacing a salaried employee"}
+    ],
+    "key_terms": ["remote work eligibility", "voluntary turnover", "27% lower turnover", "employee retention", "association not causation"]
+  },
+  "classification": {
+    "document_type": "report",
+    "rationale": "A research brief with an objective, method, findings, recommendations and limitations."
+  },
+  "summarization": {
+    "document_type": "report",
+    "headline": "Remote-work eligibility is associated with 27% lower voluntary turnover among Crestline's salaried staff.",
+    "key_points": [
+      "Study of 1,240 salaried employees across 14 sites over 18 months.",
+      "Results are observational: association, not causation."
+    ],
+    "title": "Research Brief: Remote Work and Employee Retention",
+    "key_findings": [
+      "Two or more remote days per week linked to 27% lower voluntary turnover",
+      "Effect strongest for employees with under three years of tenure",
+      "No difference in performance ratings",
+      "Replacing a salaried employee costs about $38,000"
+    ],
+    "recommendations": [
+      "Extend two-day remote eligibility to all suitable salaried roles",
+      "Re-evaluate retention after 12 months"
+    ]
+  }
+}

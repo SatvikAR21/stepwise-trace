@@ -1,0 +1,39 @@
+{
+  "extraction": {
+    "people": [
+      {"name": "Samuel Adeyemi", "role": "Site Reliability Engineering Lead"}
+    ],
+    "organizations": [
+      {"name": "Quickpay Financial Technologies", "role": "Organization"}
+    ],
+    "dates": [
+      {"raw": "October 2, 2025", "iso_date": "2025-10-02", "context": "Date of incident"}
+    ],
+    "amounts": [
+      {"raw": "$64,000", "value": 64000, "currency": "USD", "context": "Estimated lost processing revenue"}
+    ],
+    "key_terms": ["INC-4471", "Payment API outage", "connection-pool misconfiguration", "timeout errors", "configuration review"]
+  },
+  "classification": {
+    "document_type": "report",
+    "rationale": "An incident postmortem analysing an outage, its root cause, timeline and action items."
+  },
+  "summarization": {
+    "document_type": "report",
+    "headline": "A connection-pool misconfiguration caused an 87-minute Payment API outage affecting about 21,000 transactions.",
+    "key_points": [
+      "38% of card payment requests failed between 14:05 and 15:32 UTC on October 2, 2025.",
+      "Estimated lost processing revenue: $64,000."
+    ],
+    "title": "Incident Postmortem: Payment API Outage",
+    "key_findings": [
+      "Connection-pool size was reduced from 200 to 20 in a routine configuration change",
+      "Requests queued under peak load until they timed out"
+    ],
+    "recommendations": [
+      "Validate connection-pool settings automatically before deployment",
+      "Alert on connection-pool saturation",
+      "Require a second reviewer for production configuration changes"
+    ]
+  }
+}

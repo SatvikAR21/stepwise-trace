@@ -1,0 +1,37 @@
+{
+  "_comment": "INTENDED FAILURE (extraction_hallucination): the CEO is never named (and is referred to as 'she'), but extraction invents 'John Smith'. The summary names him as the sender.",
+  "extraction": {
+    "people": [
+      {"name": "John Smith", "role": "CEO, Brightwater Utilities"}
+    ],
+    "organizations": [
+      {"name": "Brightwater Utilities", "role": "Sender"},
+      {"name": "Cascade Renewable Energy", "role": "Recipient"}
+    ],
+    "dates": [
+      {"raw": "September 18, 2025", "iso_date": "2025-09-18", "context": "Letter date"}
+    ],
+    "amounts": [],
+    "key_terms": ["community solar proposal", "500-household pilot", "Riverside district", "municipal references"]
+  },
+  "classification": {
+    "document_type": "correspondence",
+    "rationale": "A follow-up letter between two organizations requesting information before a meeting."
+  },
+  "summarization": {
+    "document_type": "correspondence",
+    "headline": "John Smith, CEO of Brightwater Utilities, asks Cascade Renewable Energy for details on its community solar pilot.",
+    "key_points": [
+      "Interest in a 500-household pilot in the Riverside district.",
+      "Meeting dates to be proposed after documents arrive."
+    ],
+    "sender": "John Smith, CEO, Brightwater Utilities",
+    "recipient": "Partnerships Team, Cascade Renewable Energy",
+    "purpose": "Request information to continue partnership discussions",
+    "action_items": [
+      "Send projected installation cost per household",
+      "Send maintenance and warranty terms",
+      "Provide two municipal utility references"
+    ]
+  }
+}
