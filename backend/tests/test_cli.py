@@ -45,7 +45,7 @@ def test_run_all_prints_table_and_flags_mismatches(capsys: pytest.CaptureFixture
     assert "input truncated" in out
 
 
-def test_provider_override_is_applied(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_provider_override_is_applied() -> None:
     with pytest.raises(RuntimeError, match="LLM_API_KEY is required"):
         cli.main(["--provider", "openai", "run", "invoice_simple_06"])
 
