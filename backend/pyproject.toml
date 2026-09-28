@@ -1,5 +1,5 @@
 [project]
-name = "failure-forensics"
+name = "stepwise-trace"
 version = "0.1.0"
 description = "Observability and root-cause analysis for multi-step AI document pipelines."
 requires-python = ">=3.11"

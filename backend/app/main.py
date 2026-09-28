@@ -16,7 +16,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     configure_logging(resolved.log_level, resolved.log_format)
 
     app = FastAPI(
-        title="Failure Forensics",
+        title="StepWise",
         version=__version__,
         description="Tracing and root-cause analysis for multi-step AI document pipelines.",
     )

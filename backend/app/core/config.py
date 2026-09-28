@@ -63,7 +63,7 @@ class Settings(BaseSettings):
 
     data_dir: Path = Path("backend/data")
     traces_dir: Path = Path("traces")
-    database_path: Path = Path("backend/failure_forensics.db")
+    database_path: Path = Path("backend/stepwise.db")
 
     @field_validator("log_level")
     @classmethod
