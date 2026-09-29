@@ -10,6 +10,7 @@ dependencies = [
     "pydantic-settings>=2.4",
     "structlog>=24.4",
     "openai>=3.19.2",
+    "sqlalchemy>=2.0",
 ]
 
 [dependency-groups]
