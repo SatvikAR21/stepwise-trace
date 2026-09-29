@@ -40,7 +40,7 @@ def call_structured[ModelT: BaseModel](
 
     If the answer is invalid, the LLM is shown its answer and the problems and asked again, up to
     ``max_repair_attempts`` times. The answer's self-reported ``confidence`` (1-5) is split off.
-    Inside a trace, the prompt version, every attempt and the confidence are recorded on the
+    Inside a trace, the prompt versions, every attempt and the confidence are recorded on the
     current span. Raises ``LLMProviderError`` if a call fails and ``LLMOutputError`` if the last
     answer is still invalid.
     """
@@ -72,6 +72,8 @@ def call_structured[ModelT: BaseModel](
                 ChatMessage(role=Role.ASSISTANT, content=response.content),
                 REPAIR_PROMPT.render_user(problems=str(exc)),
             ]
+            if span is not None:
+                span.set_repair_prompt(REPAIR_PROMPT.version)
             attempt += 1
             continue
         _record_call(span, attempt, messages, response, None)

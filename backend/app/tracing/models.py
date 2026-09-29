@@ -72,6 +72,9 @@ class Span(BaseModel):
     output: Any = None
     prompt_name: str | None = None
     prompt_version: str | None = None
+    repair_prompt_version: str | None = Field(
+        default=None, description="Version of the repair prompt, if an answer had to be repaired"
+    )
     llm_calls: list[LLMCallRecord] = Field(default_factory=list)
     confidence: int | None = Field(default=None, ge=1, le=5)
     confidence_note: str | None = Field(

@@ -11,6 +11,7 @@ import pytest
 from app.core.config import LogFormat
 from app.core.logging import configure_logging, get_logger
 from app.llm.mock import MockLLMClient
+from app.llm.prompts import REPAIR_PROMPT
 from app.pipeline.models import PipelineConfig, PipelineStatus, RawDocument, StepName
 from app.tracing.models import FeatureValue, SpanStatus, TraceStatus
 from app.tracing.service import trace_pipeline
@@ -83,6 +84,13 @@ def test_repaired_step_makes_the_run_degraded() -> None:
     assert result.status is PipelineStatus.COMPLETED
     assert trace.status is TraceStatus.DEGRADED
     assert trace.status_reasons == ["classification: needed 1 repair attempt(s)"]
+    versions = {s.name: s.repair_prompt_version for s in trace.spans}
+    assert versions == {
+        "intake": None,
+        "extraction": None,
+        "classification": REPAIR_PROMPT.version,
+        "summarization": None,
+    }
 
 
 def test_spans_capture_inputs_outputs_prompts_and_llm_calls() -> None:
@@ -138,6 +146,7 @@ def test_failed_step_is_recorded_and_later_steps_are_absent() -> None:
     assert failed.output is None
     assert [c.raw_response for c in failed.llm_calls] == ["Sorry, I can't do that."] * 2
     assert all(c.error is not None for c in failed.llm_calls)
+    assert failed.repair_prompt_version == REPAIR_PROMPT.version
     assert "extraction failed: LLMOutputError" in trace.status_reasons
     assert trace.final_output is None
 

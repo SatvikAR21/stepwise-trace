@@ -84,6 +84,7 @@ class SpanRecorder:
         self.output: Any = None
         self.prompt_name: str | None = None
         self.prompt_version: str | None = None
+        self.repair_prompt_version: str | None = None
         self.llm_calls: list[LLMCallRecord] = []
         self.confidence: int | None = None
         self.confidence_note: str | None = None
@@ -93,6 +94,10 @@ class SpanRecorder:
     def set_prompt(self, name: str, version: str) -> None:
         """Remember which prompt template (and version) the step used."""
         self.prompt_name, self.prompt_version = name, version
+
+    def set_repair_prompt(self, version: str) -> None:
+        """Remember which version of the repair prompt was sent after an invalid answer."""
+        self.repair_prompt_version = version
 
     def record_llm_call(self, record: LLMCallRecord) -> None:
         """Add one LLM request/response (or failed attempt) to the span."""
@@ -119,6 +124,7 @@ class SpanRecorder:
             output=self.output,
             prompt_name=self.prompt_name,
             prompt_version=self.prompt_version,
+            repair_prompt_version=self.repair_prompt_version,
             llm_calls=self.llm_calls,
             confidence=self.confidence,
             confidence_note=self.confidence_note,
