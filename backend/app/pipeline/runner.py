@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel, Field
-
 from app.core.logging import get_logger
 from app.llm.base import LLMClient, LLMError, LLMOutputError
 from app.pipeline.errors import PipelineStepError
@@ -13,6 +11,7 @@ from app.pipeline.models import (
     ClassificationResult,
     ExtractedEntities,
     NormalizedDocument,
+    PipelineConfig,
     PipelineResult,
     PipelineStatus,
     RawDocument,
@@ -23,14 +22,6 @@ from app.pipeline.models import (
 from app.pipeline.steps import run_classification, run_extraction, run_intake, run_summarization
 
 logger = get_logger(__name__)
-
-
-class PipelineConfig(BaseModel):
-    """Knobs for one pipeline run."""
-
-    intake_max_chars: int = Field(default=6000, gt=0)
-    temperature: float = Field(default=0.0, ge=0.0, le=2.0)
-    max_repair_attempts: int = Field(default=1, ge=0, le=3)
 
 
 def run_pipeline(

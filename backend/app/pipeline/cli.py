@@ -11,8 +11,7 @@ from app.core.logging import configure_logging
 from app.llm.base import LLMClient
 from app.llm.factory import build_llm_client
 from app.pipeline.documents import DocumentManifest, load_document, load_manifest
-from app.pipeline.models import PipelineResult, PipelineStatus
-from app.pipeline.runner import PipelineConfig
+from app.pipeline.models import PipelineConfig, PipelineResult, PipelineStatus
 from app.tracing.models import Trace, TraceStatus
 from app.tracing.service import trace_pipeline
 from app.tracing.store import TraceStore

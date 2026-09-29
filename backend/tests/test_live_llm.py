@@ -13,8 +13,7 @@ import pytest
 from app.core.config import LLMProvider, Settings
 from app.llm.factory import build_llm_client
 from app.pipeline.documents import load_document, load_manifest
-from app.pipeline.models import DocumentType, PipelineStatus
-from app.pipeline.runner import PipelineConfig
+from app.pipeline.models import DocumentType, PipelineConfig, PipelineStatus
 from app.tracing.service import trace_pipeline
 
 pytestmark = pytest.mark.live

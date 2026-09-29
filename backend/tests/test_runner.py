@@ -9,11 +9,12 @@ from app.llm.mock import MockLLMClient
 from app.pipeline.models import (
     DocumentType,
     InvoiceSummary,
+    PipelineConfig,
     PipelineStatus,
     RawDocument,
     StepName,
 )
-from app.pipeline.runner import PipelineConfig, run_pipeline
+from app.pipeline.runner import run_pipeline
 
 DOC = RawDocument(doc_id="d1", content="Invoice 42 from Acme. Total due $10.00.")
 GOOD_SCRIPTS = {

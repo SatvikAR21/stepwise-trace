@@ -202,7 +202,15 @@ SUMMARY_MODELS: dict[DocumentType, type[AnySummary]] = {
 }
 
 
-# --------------------------------------------------------------------------- Pipeline result
+# --------------------------------------------------------------------------- Settings and result
+
+
+class PipelineConfig(BaseModel):
+    """Knobs for one pipeline run."""
+
+    intake_max_chars: int = Field(default=6000, gt=0)
+    temperature: float = Field(default=0.0, ge=0.0, le=2.0)
+    max_repair_attempts: int = Field(default=1, ge=0, le=3)
 
 
 class PipelineStatus(StrEnum):

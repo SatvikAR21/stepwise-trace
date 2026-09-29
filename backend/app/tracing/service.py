@@ -3,8 +3,8 @@
 from __future__ import annotations
 
 from app.llm.base import LLMClient
-from app.pipeline.models import PipelineResult, RawDocument
-from app.pipeline.runner import PipelineConfig, run_pipeline
+from app.pipeline.models import PipelineConfig, PipelineResult, RawDocument
+from app.pipeline.runner import run_pipeline
 from app.tracing.models import Trace
 from app.tracing.tracer import start_trace
 

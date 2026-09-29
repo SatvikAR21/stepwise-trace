@@ -14,11 +14,12 @@ from app.pipeline.models import (
     DocumentType,
     ExtractedEntities,
     InvoiceSummary,
+    PipelineConfig,
     PipelineResult,
     PipelineStatus,
     StepName,
 )
-from app.pipeline.runner import PipelineConfig, run_pipeline
+from app.pipeline.runner import run_pipeline
 from app.tracing.models import TraceStatus
 from app.tracing.service import trace_pipeline
 
