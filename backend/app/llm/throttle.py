@@ -72,16 +72,19 @@ class ThrottledLLMClient(LLMClient):
 
     def _wait_for_slot(self) -> float:
         """Block until fewer than ``max_rpm`` calls started in the last minute; return the wait."""
+        waited = 0.0
         now = self._clock()
         self._forget_before(now - WINDOW_S)
-        delay = 0.0
-        if len(self._started) >= self._max_rpm:
+        # A loop, not a single wait: a coarse clock (about 16 ms steps on Windows) can report a
+        # little less time than was slept, and the oldest call must really have left the window.
+        while len(self._started) >= self._max_rpm:
             delay = self._started[0] + WINDOW_S - now
             self._sleep(delay)
+            waited += delay
             now = self._clock()
             self._forget_before(now - WINDOW_S)
         self._started.append(now)
-        return delay
+        return waited
 
     def _forget_before(self, cutoff: float) -> None:
         while self._started and self._started[0] <= cutoff:

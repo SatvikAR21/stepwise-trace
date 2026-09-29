@@ -79,6 +79,33 @@ def test_extra_call_waits_until_the_oldest_leaves_the_window() -> None:
     assert third.wait_ms == 50_000.0
 
 
+class CoarseClock(FakeClock):
+    """Reports the first sleep 10 ms short, like a clock that only ticks every 16 ms."""
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.shortfall = 0.01
+
+    def sleep(self, seconds: float) -> None:
+        self.sleeps.append(seconds)
+        self.now += seconds - self.shortfall
+        self.shortfall = 0.0
+
+
+def test_a_clock_that_reports_less_time_than_slept_cannot_break_the_limit() -> None:
+    clock = CoarseClock()
+    client = _throttled(ScriptedClient(OK), clock)
+
+    client.complete(REQUEST)
+    clock.now += 10
+    client.complete(REQUEST)
+    third = client.complete(REQUEST)
+
+    assert clock.sleeps == [50.0, pytest.approx(0.01)]
+    assert clock.now >= 1060.0  # the third call starts a full minute after the first
+    assert third.wait_ms == pytest.approx(50_010.0)
+
+
 def test_window_slides_so_old_calls_stop_counting() -> None:
     clock = FakeClock()
     client = _throttled(ScriptedClient(OK), clock)
