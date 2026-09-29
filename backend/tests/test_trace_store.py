@@ -56,6 +56,8 @@ def test_save_writes_a_readable_json_file_and_get_reads_it_back(
 
     assert path == tmp_path / "traces" / f"{base_trace.trace_id}.json"
     assert json.loads(path.read_text(encoding="utf-8"))["trace_id"] == base_trace.trace_id
+    raw = path.read_bytes()
+    assert b"\r\n" not in raw and raw.endswith(b"}\n")
     assert (tmp_path / "db" / "index.db").is_file()
     assert store.get(base_trace.trace_id) == base_trace
 

@@ -77,7 +77,8 @@ class TraceStore:
         """Write the trace file and add (or replace) its index row. Returns the file path."""
         engine = self._db()
         path = self._file(trace.trace_id)
-        path.write_text(trace.model_dump_json(indent=2), encoding="utf-8")
+        # Same bytes on every OS (LF line endings), so trace files diff cleanly in git.
+        path.write_text(trace.model_dump_json(indent=2) + "\n", encoding="utf-8", newline="\n")
         with Session(engine) as session, session.begin():
             session.merge(_to_row(trace))
         return path
