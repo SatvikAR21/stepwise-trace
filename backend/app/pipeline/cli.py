@@ -38,10 +38,22 @@ def _build_parser() -> argparse.ArgumentParser:
     listing = traces_sub.add_parser("list", help="recorded traces, newest first")
     listing.add_argument("--status", choices=[s.value for s in TraceStatus])
     listing.add_argument("--doc", dest="doc_id", help="only traces of this document")
-    listing.add_argument("--limit", type=int, default=20, help="how many to show (default 20)")
+    listing.add_argument(
+        "--limit", type=_positive_int, default=20, help="how many to show (default 20)"
+    )
     show = traces_sub.add_parser("show", help="print one trace as JSON")
     show.add_argument("trace_id")
     return parser
+
+
+def _positive_int(value: str) -> int:
+    try:
+        number = int(value)
+    except ValueError:
+        raise argparse.ArgumentTypeError(f"not a whole number: {value!r}") from None
+    if number < 1:
+        raise argparse.ArgumentTypeError(f"must be 1 or more, got {number}")
+    return number
 
 
 def _cmd_list(manifest: DocumentManifest) -> int:

@@ -88,6 +88,19 @@ def test_traces_list_by_document_with_limit(capsys: pytest.CaptureFixture[str]) 
     assert "1 of 2 trace(s)" in capsys.readouterr().out
 
 
+@pytest.mark.parametrize(
+    ("limit", "message"), [("0", "must be 1 or more"), ("-3", "must be 1 or more"), ("x", "whole")]
+)
+def test_traces_list_rejects_a_bad_limit(
+    capsys: pytest.CaptureFixture[str], limit: str, message: str
+) -> None:
+    with pytest.raises(SystemExit) as exit_info:
+        cli.main(["traces", "list", "--limit", limit])
+
+    assert exit_info.value.code == 2
+    assert message in capsys.readouterr().err
+
+
 def test_traces_show_prints_one_trace(capsys: pytest.CaptureFixture[str], tmp_path: Path) -> None:
     cli.main(["run", "invoice_simple_06"])
     capsys.readouterr()
