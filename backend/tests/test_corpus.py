@@ -204,6 +204,7 @@ def test_summary_drops_penalty_that_extraction_found(
 # --------------------------------------------------------------------------- traces of the corpus
 
 DEGRADED = {
+    "report_supplier_risk_long_15": ["intake: input truncated"],
     "ambiguous_amendment_letter_20": ["classification: low confidence (2/5)"],
 }
 

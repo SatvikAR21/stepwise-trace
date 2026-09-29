@@ -5,6 +5,7 @@ from __future__ import annotations
 import re
 
 from app.pipeline.errors import IntakeError
+from app.pipeline.features import intake_features
 from app.pipeline.models import DocumentFormat, NormalizedDocument, RawDocument, StepName
 from app.tracing.tracer import traced_step
 
@@ -18,7 +19,7 @@ _INLINE_SPACE_RE = re.compile(r"[ \t]+")
 _EXCESS_BLANK_LINES_RE = re.compile(r"\n{3,}")
 
 
-@traced_step(StepName.INTAKE)
+@traced_step(StepName.INTAKE, features=intake_features)
 def run_intake(document: RawDocument, *, max_chars: int) -> NormalizedDocument:
     """Normalize ``document`` and cap it at ``max_chars`` characters.
 

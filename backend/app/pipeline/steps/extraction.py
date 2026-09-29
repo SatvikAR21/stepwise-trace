@@ -4,12 +4,13 @@ from __future__ import annotations
 
 from app.llm.base import LLMClient
 from app.llm.prompts import EXTRACTION_PROMPT
+from app.pipeline.features import extraction_features
 from app.pipeline.models import ExtractedEntities, NormalizedDocument, StepName
 from app.pipeline.steps.common import call_structured
 from app.tracing.tracer import traced_step
 
 
-@traced_step(StepName.EXTRACTION)
+@traced_step(StepName.EXTRACTION, features=extraction_features)
 def run_extraction(
     document: NormalizedDocument,
     llm: LLMClient,

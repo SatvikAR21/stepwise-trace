@@ -4,12 +4,13 @@ from __future__ import annotations
 
 from app.llm.base import LLMClient
 from app.llm.prompts import SUMMARIZATION_PROMPT, SUMMARY_SCHEMAS
+from app.pipeline.features import summarization_features
 from app.pipeline.models import SUMMARY_MODELS, AnySummary, StepName, SummarizationInput
 from app.pipeline.steps.common import call_structured, to_prompt_json
 from app.tracing.tracer import traced_step
 
 
-@traced_step(StepName.SUMMARIZATION)
+@traced_step(StepName.SUMMARIZATION, features=summarization_features)
 def run_summarization(
     step_input: SummarizationInput,
     llm: LLMClient,

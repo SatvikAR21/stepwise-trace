@@ -4,12 +4,13 @@ from __future__ import annotations
 
 from app.llm.base import LLMClient
 from app.llm.prompts import CLASSIFICATION_PROMPT
+from app.pipeline.features import classification_features
 from app.pipeline.models import ClassificationInput, ClassificationResult, StepName
 from app.pipeline.steps.common import call_structured, to_prompt_json
 from app.tracing.tracer import traced_step
 
 
-@traced_step(StepName.CLASSIFICATION)
+@traced_step(StepName.CLASSIFICATION, features=classification_features)
 def run_classification(
     step_input: ClassificationInput,
     llm: LLMClient,
