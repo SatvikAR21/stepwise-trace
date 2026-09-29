@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import threading
+
 import pytest
 
 from app.llm.base import ChatMessage, LLMClient, LLMProviderError, LLMRequest, LLMResponse, Role
@@ -104,6 +106,33 @@ def test_a_clock_that_reports_less_time_than_slept_cannot_break_the_limit() -> N
     assert clock.sleeps == [50.0, pytest.approx(0.01)]
     assert clock.now >= 1060.0  # the third call starts a full minute after the first
     assert third.wait_ms == pytest.approx(50_010.0)
+
+
+def test_parallel_callers_take_turns_reserving_a_slot() -> None:
+    clock = FakeClock()
+    other_thread: list[threading.Thread] = []
+    other_was_blocked: list[bool] = []
+    other_results: list[LLMResponse] = []
+
+    def sleep(seconds: float) -> None:
+        if not other_thread:  # the first wait: meanwhile a second thread tries to call
+            thread = threading.Thread(target=lambda: other_results.append(client.complete(REQUEST)))
+            other_thread.append(thread)
+            thread.start()
+            thread.join(timeout=0.3)
+            other_was_blocked.append(thread.is_alive())
+        clock.sleep(seconds)
+
+    client = ThrottledLLMClient(ScriptedClient(OK), max_rpm=1, clock=clock, sleep=sleep)
+
+    client.complete(REQUEST)
+    mine = client.complete(REQUEST)  # has to wait; the other thread must wait behind it
+    other_thread[0].join(timeout=5)
+
+    assert other_was_blocked == [True]
+    assert clock.sleeps == [60.0, 60.0]
+    assert mine.wait_ms == 60_000.0
+    assert [r.wait_ms for r in other_results] == [120_000.0]  # its turn, then its own slot
 
 
 def test_window_slides_so_old_calls_stop_counting() -> None:

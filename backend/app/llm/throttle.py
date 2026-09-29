@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import threading
 import time
 from collections import deque
 from collections.abc import Callable
@@ -24,7 +25,9 @@ class ThrottledLLMClient(LLMClient):
        (or one pacing interval), capped at 60 s, and try again, at most ``max_rate_limit_retries``
        times.
 
-    Time spent waiting is added to ``LLMResponse.wait_ms`` so traces show it. ``clock`` and
+    One instance can be shared between threads: callers take turns reserving a slot, while the
+    calls themselves still run in parallel. Time spent waiting (for a slot, for another caller's
+    turn, or after a 429) is added to ``LLMResponse.wait_ms`` so traces show it. ``clock`` and
     ``sleep`` can be replaced in tests.
     """
 
@@ -45,6 +48,7 @@ class ThrottledLLMClient(LLMClient):
         self._clock = clock
         self._sleep = sleep
         self._started: deque[float] = deque()
+        self._lock = threading.Lock()
 
     @property
     def model_name(self) -> str:
@@ -73,18 +77,25 @@ class ThrottledLLMClient(LLMClient):
     def _wait_for_slot(self) -> float:
         """Block until fewer than ``max_rpm`` calls started in the last minute; return the wait."""
         waited = 0.0
-        now = self._clock()
-        self._forget_before(now - WINDOW_S)
-        # A loop, not a single wait: a coarse clock (about 16 ms steps on Windows) can report a
-        # little less time than was slept, and the oldest call must really have left the window.
-        while len(self._started) >= self._max_rpm:
-            delay = self._started[0] + WINDOW_S - now
-            self._sleep(delay)
-            waited += delay
+        if not self._lock.acquire(blocking=False):  # another caller is reserving: queue up
+            queued_at = self._clock()
+            self._lock.acquire()
+            waited = self._clock() - queued_at
+        try:
             now = self._clock()
             self._forget_before(now - WINDOW_S)
-        self._started.append(now)
-        return waited
+            # A loop, not a single wait: a coarse clock (about 16 ms steps on Windows) can report
+            # a little less time than was slept, and the oldest call must really have left.
+            while len(self._started) >= self._max_rpm:
+                delay = self._started[0] + WINDOW_S - now
+                self._sleep(delay)
+                waited += delay
+                now = self._clock()
+                self._forget_before(now - WINDOW_S)
+            self._started.append(now)
+            return waited
+        finally:
+            self._lock.release()
 
     def _forget_before(self, cutoff: float) -> None:
         while self._started and self._started[0] <= cutoff:
