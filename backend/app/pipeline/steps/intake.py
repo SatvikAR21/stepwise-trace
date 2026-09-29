@@ -5,7 +5,8 @@ from __future__ import annotations
 import re
 
 from app.pipeline.errors import IntakeError
-from app.pipeline.models import DocumentFormat, NormalizedDocument, RawDocument
+from app.pipeline.models import DocumentFormat, NormalizedDocument, RawDocument, StepName
+from app.tracing.tracer import traced_step
 
 # Lines that are only page furniture from PDF-to-text conversion: "Page 2 of 3", "- 2 -".
 _PAGE_MARKER_RE = re.compile(
@@ -17,6 +18,7 @@ _INLINE_SPACE_RE = re.compile(r"[ \t]+")
 _EXCESS_BLANK_LINES_RE = re.compile(r"\n{3,}")
 
 
+@traced_step(StepName.INTAKE)
 def run_intake(document: RawDocument, *, max_chars: int) -> NormalizedDocument:
     """Normalize ``document`` and cap it at ``max_chars`` characters.
 

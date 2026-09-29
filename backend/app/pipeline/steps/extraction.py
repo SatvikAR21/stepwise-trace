@@ -6,16 +6,18 @@ from app.llm.base import LLMClient
 from app.llm.prompts import EXTRACTION_PROMPT
 from app.pipeline.models import ExtractedEntities, NormalizedDocument, StepName
 from app.pipeline.steps.common import call_structured
+from app.tracing.tracer import traced_step
 
 
+@traced_step(StepName.EXTRACTION)
 def run_extraction(
     document: NormalizedDocument, llm: LLMClient, *, temperature: float = 0.0
 ) -> ExtractedEntities:
     """Extract people, organizations, dates, amounts and key terms from ``document``."""
-    messages = EXTRACTION_PROMPT.render(document_text=document.text)
     return call_structured(
         llm,
-        messages,
+        EXTRACTION_PROMPT,
+        {"document_text": document.text},
         ExtractedEntities,
         doc_id=document.doc_id,
         step=StepName.EXTRACTION,
