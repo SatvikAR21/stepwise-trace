@@ -2,18 +2,14 @@
 
 from __future__ import annotations
 
-from typing import TypeVar
-
 from pydantic import BaseModel
 
 from app.llm.base import META_DOC_ID, META_STEP, ChatMessage, LLMClient, LLMRequest
 from app.llm.structured import parse_json_output
 from app.pipeline.models import StepName
 
-ModelT = TypeVar("ModelT", bound=BaseModel)
 
-
-def call_structured(
+def call_structured[ModelT: BaseModel](
     llm: LLMClient,
     messages: list[ChatMessage],
     output_model: type[ModelT],

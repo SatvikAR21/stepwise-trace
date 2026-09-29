@@ -3,13 +3,10 @@
 from __future__ import annotations
 
 import re
-from typing import TypeVar
 
 from pydantic import BaseModel, ValidationError
 
 from app.llm.base import LLMOutputError
-
-ModelT = TypeVar("ModelT", bound=BaseModel)
 
 _CODE_FENCE_RE = re.compile(r"^```[a-zA-Z]*\s*\n?(.*?)\n?```$", re.DOTALL)
 
@@ -26,7 +23,7 @@ def extract_json_text(raw: str) -> str:
     return text
 
 
-def parse_json_output(raw: str, model: type[ModelT]) -> ModelT:
+def parse_json_output[ModelT: BaseModel](raw: str, model: type[ModelT]) -> ModelT:
     """Parse ``raw`` into ``model``. Raises ``LLMOutputError`` (keeping the raw text) on failure."""
     try:
         return model.model_validate_json(extract_json_text(raw))

@@ -2,7 +2,7 @@
 name = "stepwise-trace"
 version = "0.1.0"
 description = "Observability and root-cause analysis for multi-step AI document pipelines."
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 dependencies = [
     "fastapi>=0.115",
     "uvicorn[standard]>=0.30",
@@ -31,7 +31,7 @@ packages = ["app"]
 # ---------------------------------------------------------------- ruff
 [tool.ruff]
 line-length = 100
-target-version = "py311"
+target-version = "py312"
 
 [tool.ruff.lint]
 select = [
