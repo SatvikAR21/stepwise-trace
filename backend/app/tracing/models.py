@@ -13,7 +13,7 @@ from typing import Any
 from pydantic import BaseModel, Field
 
 from app.llm.base import ChatMessage
-from app.pipeline.models import PipelineStatus, StepName
+from app.pipeline.models import PipelineConfig, PipelineStatus, StepName
 
 TRACE_ID_PATTERN = r"^[0-9a-f]{32}$"
 SPAN_ID_PATTERN = r"^[0-9a-f]{16}$"
@@ -87,6 +87,9 @@ class Trace(BaseModel):
     trace_id: str = Field(pattern=TRACE_ID_PATTERN)
     doc_id: str
     model: str
+    config: PipelineConfig | None = Field(
+        default=None, description="The settings the run used, so it can be repeated exactly"
+    )
     started_at: datetime
     ended_at: datetime
     duration_ms: float = Field(ge=0.0)

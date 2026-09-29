@@ -11,7 +11,7 @@ import pytest
 from app.core.config import LogFormat
 from app.core.logging import configure_logging, get_logger
 from app.llm.mock import MockLLMClient
-from app.pipeline.models import PipelineStatus, RawDocument, StepName
+from app.pipeline.models import PipelineConfig, PipelineStatus, RawDocument, StepName
 from app.tracing.models import FeatureValue, SpanStatus, TraceStatus
 from app.tracing.service import trace_pipeline
 from app.tracing.tracer import current_span, span, start_trace, traced_step
@@ -53,6 +53,17 @@ def test_trace_records_one_span_per_step_in_order() -> None:
     assert trace.pipeline_status is PipelineStatus.COMPLETED
     assert trace.error_step is None
     assert trace.final_output["invoice_number"] == "42"
+
+
+def test_trace_records_the_settings_the_run_used() -> None:
+    custom = PipelineConfig(intake_max_chars=20, temperature=0.3, max_repair_attempts=0)
+
+    _, default_trace = trace_pipeline(DOC, MockLLMClient(SCRIPTS))
+    _, custom_trace = trace_pipeline(DOC, MockLLMClient(SCRIPTS), custom)
+
+    assert default_trace.config == PipelineConfig()
+    assert custom_trace.config == custom
+    assert custom_trace.spans[0].features["kept_chars"] == 20  # the recorded settings were used
 
 
 def test_confident_run_is_success_scored_by_its_weakest_step() -> None:

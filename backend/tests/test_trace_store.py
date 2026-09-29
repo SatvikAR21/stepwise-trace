@@ -62,6 +62,19 @@ def test_save_writes_a_readable_json_file_and_get_reads_it_back(
     assert store.get(base_trace.trace_id) == base_trace
 
 
+def test_a_trace_file_without_settings_still_loads(store: TraceStore, base_trace: Trace) -> None:
+    path = store.save(base_trace)
+    data = json.loads(path.read_text(encoding="utf-8"))
+    del data["config"]
+    path.write_text(json.dumps(data), encoding="utf-8")
+
+    loaded = store.get(base_trace.trace_id)
+
+    assert loaded is not None
+    assert loaded.config is None
+    assert loaded.spans == base_trace.spans
+
+
 @pytest.mark.parametrize("trace_id", ["0" * 32, "not-a-trace-id", "../../etc/passwd"])
 def test_get_unknown_or_malformed_id_returns_none(store: TraceStore, trace_id: str) -> None:
     assert store.get(trace_id) is None

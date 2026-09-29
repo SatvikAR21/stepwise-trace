@@ -30,7 +30,7 @@ import structlog
 from pydantic import BaseModel
 
 from app.core.logging import get_logger
-from app.pipeline.models import PipelineResult
+from app.pipeline.models import PipelineConfig, PipelineResult
 from app.tracing.models import (
     FeatureValue,
     LLMCallRecord,
@@ -152,10 +152,11 @@ class SpanRecorder:
 class TraceRecorder:
     """Collects the spans of one run while it executes."""
 
-    def __init__(self, doc_id: str, model: str) -> None:
+    def __init__(self, doc_id: str, model: str, config: PipelineConfig | None = None) -> None:
         self.trace_id = new_trace_id()
         self.doc_id = doc_id
         self.model = model
+        self.config = config
         self.started_at = _now()
         self._started = time.perf_counter()
         self.spans: list[Span] = []
@@ -171,6 +172,7 @@ class TraceRecorder:
             trace_id=self.trace_id,
             doc_id=self.doc_id,
             model=self.model,
+            config=self.config,
             started_at=self.started_at,
             ended_at=_now(),
             duration_ms=(time.perf_counter() - self._started) * 1000,
@@ -194,12 +196,15 @@ def current_span() -> SpanRecorder | None:
 
 
 @contextmanager
-def start_trace(doc_id: str, *, model: str) -> Iterator[TraceRecorder]:
+def start_trace(
+    doc_id: str, *, model: str, config: PipelineConfig | None = None
+) -> Iterator[TraceRecorder]:
     """Record every traced step that runs inside this block into one trace.
 
+    ``config`` is stored with the trace so the run can be repeated with the same settings.
     While the block runs, every log line also carries the ``trace_id``.
     """
-    recorder = TraceRecorder(doc_id, model)
+    recorder = TraceRecorder(doc_id, model, config)
     token = _current_trace.set(recorder)
     try:
         with structlog.contextvars.bound_contextvars(trace_id=recorder.trace_id):

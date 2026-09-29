@@ -15,8 +15,9 @@ first step that went wrong.
     client plus an OpenAI-compatible client (tested with Gemini), a 21-document sample corpus with
     8 deliberately failing cases, and a CLI.
   - Tracing: every run is recorded step by step (inputs, outputs, prompts, raw LLM answers, tokens,
-    latency, the model's self-reported confidence and grounding checks), given a status
-    (success / degraded / failure), saved as JSON with a SQLite index, and served by an API.
+    latency, the model's self-reported confidence and grounding checks) along with the settings it
+    used, given a status (success / degraded / failure), saved as JSON with a SQLite index, and
+    served by an API.
     Invalid LLM output gets one repair attempt, and real providers can be rate limited.
 - Next: backward root-cause analyzer, visual trace explorer, feedback-to-eval loop.
 

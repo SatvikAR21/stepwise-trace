@@ -83,6 +83,11 @@ def test_get_returns_the_full_trace(client: TestClient, saved: list[Trace]) -> N
     assert response.status_code == 200
     body = response.json()
     assert body["trace_id"] == saved[0].trace_id
+    assert body["config"] == {
+        "intake_max_chars": 6000,
+        "temperature": 0.0,
+        "max_repair_attempts": 1,
+    }
     assert [s["name"] for s in body["spans"]] == [
         "intake",
         "extraction",

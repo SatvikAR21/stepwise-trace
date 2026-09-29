@@ -13,6 +13,7 @@ def trace_pipeline(
     document: RawDocument, llm: LLMClient, config: PipelineConfig | None = None
 ) -> tuple[PipelineResult, Trace]:
     """Run all four steps inside one trace and return the result together with its trace."""
-    with start_trace(document.doc_id, model=llm.model_name) as recorder:
-        result = run_pipeline(document, llm, config)
+    cfg = config or PipelineConfig()
+    with start_trace(document.doc_id, model=llm.model_name, config=cfg) as recorder:
+        result = run_pipeline(document, llm, cfg)
     return result, recorder.finish(result)
