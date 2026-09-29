@@ -1,6 +1,7 @@
 {
   "_comment": "INTENDED FAILURE (context_loss at intake): Intake truncates at 6000 chars, cutting Section 3 (Salmonella finding, suspend Halvorsen). Later steps only saw the truncated text, so the summary calls the supplier base healthy.",
   "extraction": {
+    "confidence": 5,
     "people": [
       {"name": "Marta Kowalczyk", "role": "Head of Supplier Quality"}
     ],
@@ -25,10 +26,12 @@
     "key_terms": ["supplier risk ratings", "on-time delivery", "Code of Conduct audits", "food-traceability rules", "price increase requests"]
   },
   "classification": {
+    "confidence": 5,
     "document_type": "report",
     "rationale": "An annual supplier risk review with methodology, supplier assessments and ratings."
   },
   "summarization": {
+    "confidence": 5,
     "document_type": "report",
     "headline": "Kestrel Foods' ten key suppliers are performing well, with mostly Low risk ratings.",
     "key_points": [

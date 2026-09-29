@@ -1,5 +1,6 @@
 {
   "extraction": {
+    "confidence": 5,
     "people": [
       {"name": "Aisha Rahman", "role": "Admitted applicant"},
       {"name": "Henry Lindqvist", "role": "Director of Graduate Admissions"}
@@ -19,10 +20,12 @@
     "key_terms": ["admission offer", "Master of Science in Data Science", "Dean's Merit Scholarship", "enrollment deposit"]
   },
   "classification": {
+    "confidence": 5,
     "document_type": "correspondence",
     "rationale": "A formal letter from a university to an applicant offering admission."
   },
   "summarization": {
+    "confidence": 5,
     "document_type": "correspondence",
     "headline": "Westbrook University offers Aisha Rahman admission to its MS in Data Science with a $12,000-a-year scholarship.",
     "key_points": [

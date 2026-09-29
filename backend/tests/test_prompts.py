@@ -8,6 +8,7 @@ from app.llm.base import Role
 from app.llm.prompts import (
     CLASSIFICATION_PROMPT,
     EXTRACTION_PROMPT,
+    REPAIR_PROMPT,
     SUMMARIZATION_PROMPT,
     SUMMARY_SCHEMAS,
     PromptTemplate,
@@ -48,6 +49,27 @@ def test_prompts_are_named_versioned_and_demand_json(prompt: PromptTemplate) -> 
 
 def test_every_document_type_has_a_summary_schema() -> None:
     assert set(SUMMARY_SCHEMAS) == {t.value for t in DocumentType}
+
+
+@pytest.mark.parametrize("prompt", ALL_PROMPTS, ids=lambda p: p.name)
+def test_prompts_ask_for_a_confidence_score(prompt: PromptTemplate) -> None:
+    assert '"confidence"' in prompt.system
+    assert "1 (very unsure) to 5 (certain)" in prompt.system
+
+
+def test_render_user_fills_only_the_user_message() -> None:
+    message = PromptTemplate(name="t", version="1", system="$missing", user="Hi $who").render_user(
+        who="Ada"
+    )
+
+    assert (message.role, message.content) == (Role.USER, "Hi Ada")
+
+
+def test_repair_prompt_lists_the_problems() -> None:
+    message = REPAIR_PROMPT.render_user(problems="amounts.0.currency: bad")
+
+    assert "amounts.0.currency: bad" in message.content
+    assert "JSON" in message.content
 
 
 def test_classification_prompt_guards_against_injection() -> None:

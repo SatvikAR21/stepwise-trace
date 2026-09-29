@@ -1,6 +1,7 @@
 {
   "_comment": "INTENDED FAILURE (misclassification): a binding contract amendment written in letter form is classified as correspondence, so the summary misses its contractual nature.",
   "extraction": {
+    "confidence": 5,
     "people": [
       {"name": "Arjun Mehta", "role": "Operations Director, Solent Conference Centre"},
       {"name": "Charlotte Evans", "role": "Managing Director, Harborview Catering Ltd."}
@@ -22,10 +23,12 @@
     "key_terms": ["Amendment No. 1", "Catering Services Agreement", "per-guest rate increase", "7-day guest confirmation", "countersignature"]
   },
   "classification": {
+    "confidence": 2,
     "document_type": "correspondence",
     "rationale": "Written as a business letter from one company to another following up on a phone call; its main purpose is communication."
   },
   "summarization": {
+    "confidence": 3,
     "document_type": "correspondence",
     "headline": "Harborview Catering writes to Solent Conference Centre following up on a call about catering arrangements.",
     "key_points": [

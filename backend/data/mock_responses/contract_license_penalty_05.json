@@ -1,6 +1,7 @@
 {
   "_comment": "INTENDED FAILURE (context_loss at summarization): extraction captures the $150,000.00 early termination penalty, but the summary omits it.",
   "extraction": {
+    "confidence": 5,
     "people": [
       {"name": "Hannah Liu", "role": "CFO, Orion Retail Group"},
       {"name": "Tomas Ortega", "role": "General Counsel, Vantage Cloud Systems Inc."}
@@ -26,10 +27,12 @@
     ]
   },
   "classification": {
+    "confidence": 5,
     "document_type": "contract",
     "rationale": "A software license and support agreement between a licensor and a licensee with fees, term and termination provisions."
   },
   "summarization": {
+    "confidence": 4,
     "document_type": "contract",
     "headline": "Three-year license of the Vantage Inventory Suite to Orion Retail Group for $96,000 per year.",
     "key_points": [

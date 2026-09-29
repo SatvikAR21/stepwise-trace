@@ -1,5 +1,6 @@
 {
   "extraction": {
+    "confidence": 4,
     "people": [
       {"name": "Luis Ferreira", "role": "Service Manager, Bluewater Marine Services"}
     ],
@@ -19,10 +20,12 @@
     "key_terms": ["BW-30219", "MV Island Spirit", "hull inspection", "payment within 15 days"]
   },
   "classification": {
+    "confidence": 5,
     "document_type": "invoice",
     "rationale": "An invoice for marine services rendered, with an invoice number, itemised charges and a total amount due."
   },
   "summarization": {
+    "confidence": 4,
     "document_type": "invoice",
     "headline": "Bluewater Marine Services invoices Coastal Ferry Authority $6,525.00 for maintenance on MV Island Spirit.",
     "key_points": [

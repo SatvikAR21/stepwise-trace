@@ -49,7 +49,7 @@ SUMMARY_SCHEMAS: dict[str, str] = {
 
 SUMMARIZATION_PROMPT = PromptTemplate(
     name="summarization",
-    version="1.0.0",
+    version="1.1.0",
     system="""\
 You write precise structured summaries of business documents.
 The document has been classified as: $document_type.
@@ -59,8 +59,10 @@ Rules:
 - Keep every material term: deadlines, penalties, totals, risks and recommendations.
 - Never add up amounts that are in different currencies.
 - Use null or an empty list when the document does not state something.
+- Add "confidence": an integer from 1 (very unsure) to 5 (certain): how sure you are that the
+  summary is accurate and complete.
 
-Answer with ONE JSON object in exactly this shape and nothing else:
+Answer with ONE JSON object in exactly this shape, plus "confidence", and nothing else:
 $summary_schema""",
     user="""\
 Extracted entities:

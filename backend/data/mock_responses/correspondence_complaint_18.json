@@ -1,5 +1,6 @@
 {
   "extraction": {
+    "confidence": 5,
     "people": [
       {"name": "Thomas Nguyen", "role": "Customer"}
     ],
@@ -16,10 +17,12 @@
     "key_terms": ["order #58213", "damaged dining table", "replacement or refund", "reply within five business days"]
   },
   "classification": {
+    "confidence": 5,
     "document_type": "correspondence",
     "rationale": "A customer's complaint letter to a retailer requesting a remedy."
   },
   "summarization": {
+    "confidence": 4,
     "document_type": "correspondence",
     "headline": "Thomas Nguyen demands a replacement or refund for a damaged $1,640 dining set from Evergreen Furniture Outlet.",
     "key_points": [

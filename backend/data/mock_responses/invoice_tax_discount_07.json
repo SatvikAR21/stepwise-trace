@@ -1,5 +1,6 @@
 {
   "extraction": {
+    "confidence": 5,
     "people": [
       {"name": "Jordan Blake", "role": "Billing contact"}
     ],
@@ -20,10 +21,12 @@
     "key_terms": ["INV-7781", "brand identity refresh", "loyalty discount", "sales tax", "bank transfer"]
   },
   "classification": {
+    "confidence": 5,
     "document_type": "invoice",
     "rationale": "An invoice for design services with hourly line items, discount, tax and a total due."
   },
   "summarization": {
+    "confidence": 4,
     "document_type": "invoice",
     "headline": "Pixel & Pine Design Studio invoices Summit Outdoor Gear $6,755.40 for design work, due August 2, 2025.",
     "key_points": [

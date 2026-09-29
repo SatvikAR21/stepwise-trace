@@ -30,6 +30,7 @@ class PipelineConfig(BaseModel):
 
     intake_max_chars: int = Field(default=6000, gt=0)
     temperature: float = Field(default=0.0, ge=0.0, le=2.0)
+    max_repair_attempts: int = Field(default=1, ge=0, le=3)
 
 
 def run_pipeline(
@@ -54,7 +55,12 @@ def run_pipeline(
         log.info("step_completed", step=step.value, truncated=normalized.truncated)
 
         step = StepName.EXTRACTION
-        entities = run_extraction(normalized, llm, temperature=cfg.temperature)
+        entities = run_extraction(
+            normalized,
+            llm,
+            temperature=cfg.temperature,
+            max_repair_attempts=cfg.max_repair_attempts,
+        )
         log.info("step_completed", step=step.value)
 
         step = StepName.CLASSIFICATION
@@ -62,6 +68,7 @@ def run_pipeline(
             ClassificationInput(document=normalized, entities=entities),
             llm,
             temperature=cfg.temperature,
+            max_repair_attempts=cfg.max_repair_attempts,
         )
         log.info("step_completed", step=step.value, document_type=classification.document_type)
 
@@ -72,6 +79,7 @@ def run_pipeline(
             ),
             llm,
             temperature=cfg.temperature,
+            max_repair_attempts=cfg.max_repair_attempts,
         )
         log.info("step_completed", step=step.value)
     except (PipelineStepError, LLMError) as exc:

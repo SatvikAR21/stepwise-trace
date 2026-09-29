@@ -81,7 +81,9 @@ def _note(result: PipelineResult, expected: str) -> str:
 
 def _pipeline_config(settings: Settings) -> PipelineConfig:
     return PipelineConfig(
-        intake_max_chars=settings.intake_max_chars, temperature=settings.llm_temperature
+        intake_max_chars=settings.intake_max_chars,
+        temperature=settings.llm_temperature,
+        max_repair_attempts=settings.llm_max_repair_attempts,
     )
 
 

@@ -1,6 +1,7 @@
 {
   "_comment": "INTENDED FAILURE (misclassification): an expense report that explicitly is not a payment request is classified as an invoice; the summary then takes the invoice shape.",
   "extraction": {
+    "confidence": 5,
     "people": [
       {"name": "Nina Sokolova", "role": "Regional Sales Manager"}
     ],
@@ -20,10 +21,12 @@
     "key_terms": ["travel and expense report", "budget tracking", "21% below budget", "not a request for payment"]
   },
   "classification": {
+    "confidence": 3,
     "document_type": "invoice",
     "rationale": "The document lists itemised charges with dates and amounts and states a total, which is typical of an invoice."
   },
   "summarization": {
+    "confidence": 4,
     "document_type": "invoice",
     "headline": "Harlow Medical Devices field sales submits charges totalling $1,983.50 to the Finance Department.",
     "key_points": [

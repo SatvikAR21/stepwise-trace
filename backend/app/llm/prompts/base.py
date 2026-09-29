@@ -28,5 +28,9 @@ class PromptTemplate(BaseModel):
         """Fill the placeholders. Raises ``KeyError`` if a placeholder has no value."""
         return [
             ChatMessage(role=Role.SYSTEM, content=Template(self.system).substitute(values)),
-            ChatMessage(role=Role.USER, content=Template(self.user).substitute(values)),
+            self.render_user(**values),
         ]
+
+    def render_user(self, **values: str) -> ChatMessage:
+        """Fill only the user message, e.g. for a follow-up turn in an ongoing conversation."""
+        return ChatMessage(role=Role.USER, content=Template(self.user).substitute(values))

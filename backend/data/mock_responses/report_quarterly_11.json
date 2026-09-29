@@ -1,5 +1,6 @@
 {
   "extraction": {
+    "confidence": 5,
     "people": [
       {"name": "Grace Mendoza", "role": "Director of Revenue Operations"}
     ],
@@ -17,10 +18,12 @@
     "key_terms": ["Q2 revenue growth", "SmartCool refrigerator line", "online sales", "retail partner decline", "customer acquisition cost"]
   },
   "classification": {
+    "confidence": 5,
     "document_type": "report",
     "rationale": "An analytical sales report presenting metrics, findings and recommendations."
   },
   "summarization": {
+    "confidence": 5,
     "document_type": "report",
     "headline": "Lumen Home Appliances grew Q2 2025 revenue to $12.4 million, led by the new SmartCool line.",
     "key_points": [

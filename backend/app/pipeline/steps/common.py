@@ -7,6 +7,7 @@ from collections.abc import Mapping
 from pydantic import BaseModel
 
 from app.llm.base import (
+    META_ATTEMPT,
     META_DOC_ID,
     META_STEP,
     ChatMessage,
@@ -15,9 +16,10 @@ from app.llm.base import (
     LLMOutputError,
     LLMRequest,
     LLMResponse,
+    Role,
 )
-from app.llm.prompts import PromptTemplate
-from app.llm.structured import parse_json_output
+from app.llm.prompts import REPAIR_PROMPT, PromptTemplate
+from app.llm.structured import parse_scored_output
 from app.pipeline.models import StepName
 from app.tracing.models import LLMCallRecord
 from app.tracing.tracer import SpanRecorder, current_span
@@ -32,35 +34,50 @@ def call_structured[ModelT: BaseModel](
     doc_id: str,
     step: StepName,
     temperature: float = 0.0,
+    max_repair_attempts: int = 1,
 ) -> ModelT:
-    """Render ``prompt``, make one JSON-mode LLM call and validate the answer.
+    """Render ``prompt``, call the LLM in JSON mode and validate the answer.
 
-    Inside a trace, the prompt version and every call (request, raw answer, tokens, latency, error)
-    are recorded on the current span. Raises ``LLMProviderError`` if the call fails and
-    ``LLMOutputError`` if the answer is invalid.
+    If the answer is invalid, the LLM is shown its answer and the problems and asked again, up to
+    ``max_repair_attempts`` times. The answer's self-reported ``confidence`` (1-5) is split off.
+    Inside a trace, the prompt version, every attempt and the confidence are recorded on the
+    current span. Raises ``LLMProviderError`` if a call fails and ``LLMOutputError`` if the last
+    answer is still invalid.
     """
     messages = prompt.render(**variables)
     span = current_span()
     if span is not None:
         span.set_prompt(prompt.name, prompt.version)
-    request = LLMRequest(
-        messages=messages,
-        temperature=temperature,
-        json_mode=True,
-        metadata={META_DOC_ID: doc_id, META_STEP: step.value},
-    )
-    try:
-        response = llm.complete(request)
-    except LLMError as exc:
-        _record_call(span, 1, messages, None, f"{type(exc).__name__}: {exc}")
-        raise
-    try:
-        result = parse_json_output(response.content, output_model)
-    except LLMOutputError as exc:
-        _record_call(span, 1, messages, response, str(exc))
-        raise
-    _record_call(span, 1, messages, response, None)
-    return result
+    attempt = 1
+    while True:
+        request = LLMRequest(
+            messages=messages,
+            temperature=temperature,
+            json_mode=True,
+            metadata={META_DOC_ID: doc_id, META_STEP: step.value, META_ATTEMPT: str(attempt)},
+        )
+        try:
+            response = llm.complete(request)
+        except LLMError as exc:
+            _record_call(span, attempt, messages, None, f"{type(exc).__name__}: {exc}")
+            raise
+        try:
+            scored = parse_scored_output(response.content, output_model)
+        except LLMOutputError as exc:
+            _record_call(span, attempt, messages, response, str(exc))
+            if attempt > max_repair_attempts:
+                raise
+            messages = [
+                *messages,
+                ChatMessage(role=Role.ASSISTANT, content=response.content),
+                REPAIR_PROMPT.render_user(problems=str(exc)),
+            ]
+            attempt += 1
+            continue
+        _record_call(span, attempt, messages, response, None)
+        if span is not None:
+            span.set_confidence(scored.confidence, scored.confidence_note)
+        return scored.value
 
 
 def _record_call(

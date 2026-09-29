@@ -7,15 +7,30 @@ from pathlib import Path
 
 import pytest
 
-from app.llm.base import META_DOC_ID, META_STEP, ChatMessage, LLMRequest, Role
+from app.llm.base import META_ATTEMPT, META_DOC_ID, META_STEP, ChatMessage, LLMRequest, Role
 from app.llm.mock import MOCK_MODEL_NAME, MockLLMClient, MockScriptMissingError
 
 
-def _request(doc_id: str = "doc1", step: str = "extraction", text: str = "x" * 40) -> LLMRequest:
+def _request(
+    doc_id: str = "doc1", step: str = "extraction", text: str = "x" * 40, attempt: int = 1
+) -> LLMRequest:
     return LLMRequest(
         messages=[ChatMessage(role=Role.USER, content=text)],
-        metadata={META_DOC_ID: doc_id, META_STEP: step},
+        metadata={META_DOC_ID: doc_id, META_STEP: step, META_ATTEMPT: str(attempt)},
     )
+
+
+def test_list_script_answers_per_attempt_and_repeats_the_last() -> None:
+    llm = MockLLMClient({("doc1", "extraction"): ["bad", {"key_terms": []}]})
+
+    answers = [llm.complete(_request(attempt=n)).content for n in (1, 2, 3)]
+
+    assert answers == ["bad", '{"key_terms": []}', '{"key_terms": []}']
+
+
+def test_empty_script_list_is_an_error() -> None:
+    with pytest.raises(MockScriptMissingError, match="empty"):
+        MockLLMClient({("doc1", "extraction"): []}).complete(_request())
 
 
 def test_returns_in_memory_script_as_json() -> None:

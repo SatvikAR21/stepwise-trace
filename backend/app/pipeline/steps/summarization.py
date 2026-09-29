@@ -11,7 +11,11 @@ from app.tracing.tracer import traced_step
 
 @traced_step(StepName.SUMMARIZATION)
 def run_summarization(
-    step_input: SummarizationInput, llm: LLMClient, *, temperature: float = 0.0
+    step_input: SummarizationInput,
+    llm: LLMClient,
+    *,
+    temperature: float = 0.0,
+    max_repair_attempts: int = 1,
 ) -> AnySummary:
     """Summarize the document using the schema for its classified type.
 
@@ -32,4 +36,5 @@ def run_summarization(
         doc_id=step_input.document.doc_id,
         step=StepName.SUMMARIZATION,
         temperature=temperature,
+        max_repair_attempts=max_repair_attempts,
     )

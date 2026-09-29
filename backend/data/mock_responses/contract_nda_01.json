@@ -1,5 +1,6 @@
 {
   "extraction": {
+    "confidence": 5,
     "people": [
       {"name": "Priya Raman", "role": "Chief Executive Officer, Brightline Analytics Inc."},
       {"name": "Daniel Okafor", "role": "Managing Partner, Harbor & Finch LLP"}
@@ -22,10 +23,12 @@
     ]
   },
   "classification": {
+    "confidence": 5,
     "document_type": "contract",
     "rationale": "A mutual NDA between two named parties with obligations, a defined term, remedies and signatures."
   },
   "summarization": {
+    "confidence": 5,
     "document_type": "contract",
     "headline": "Two-year mutual NDA between Brightline Analytics and Harbor & Finch to evaluate a data-analytics partnership.",
     "key_points": [

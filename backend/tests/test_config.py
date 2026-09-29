@@ -52,6 +52,14 @@ def test_reads_from_env_file(tmp_path: Path) -> None:
     assert settings.require_llm_api_key() == "sk-from-file"
 
 
+def test_repair_attempts_default_to_one_and_are_bounded(monkeypatch: pytest.MonkeyPatch) -> None:
+    assert _settings().llm_max_repair_attempts == 1
+    monkeypatch.setenv("LLM_MAX_REPAIR_ATTEMPTS", "0")
+    assert _settings().llm_max_repair_attempts == 0
+    with pytest.raises(ValidationError):
+        _settings(llm_max_repair_attempts=4)
+
+
 def test_log_level_is_normalized() -> None:
     assert _settings(log_level=" debug ").log_level == "DEBUG"
 

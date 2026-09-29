@@ -1,5 +1,6 @@
 {
   "extraction": {
+    "confidence": 5,
     "people": [
       {"name": "Olivia Grant", "role": "Event Coordinator, Tidewater Events"},
       {"name": "Ben Carter", "role": "Recipient, Northlight Media"}
@@ -20,10 +21,12 @@
     "key_terms": ["venue walkthrough", "product launch", "AV requirements", "remaining deposit"]
   },
   "classification": {
+    "confidence": 5,
     "document_type": "correspondence",
     "rationale": "An email between two people coordinating an event walkthrough and reminding about deadlines."
   },
   "summarization": {
+    "confidence": 5,
     "document_type": "correspondence",
     "headline": "Tidewater Events asks Northlight Media to schedule a venue walkthrough and confirm AV needs before the launch.",
     "key_points": [

@@ -1,5 +1,6 @@
 {
   "extraction": {
+    "confidence": 5,
     "people": [],
     "organizations": [
       {"name": "City of Maple Grove", "role": "Utility provider"},
@@ -20,10 +21,12 @@
     "key_terms": ["WS-2025-10-4471", "water and sewer utility", "18,400 gallons", "late fee"]
   },
   "classification": {
+    "confidence": 5,
     "document_type": "invoice",
     "rationale": "A utility bill requesting payment of an amount due by a due date for services in a billing period."
   },
   "summarization": {
+    "confidence": 5,
     "document_type": "invoice",
     "headline": "City of Maple Grove bills Patel Family Restaurant $252.90 for September 2025 water and sewer service.",
     "key_points": [

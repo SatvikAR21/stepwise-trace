@@ -8,9 +8,10 @@ from enum import StrEnum
 from pydantic import BaseModel, Field
 
 # Well-known ``LLMRequest.metadata`` keys. The mock client scripts responses by them, and the
-# tracing layer records them.
+# tracing layer records them. ``attempt`` is "1" for the first try and "2"+ for repair attempts.
 META_DOC_ID = "doc_id"
 META_STEP = "step"
+META_ATTEMPT = "attempt"
 
 
 class Role(StrEnum):

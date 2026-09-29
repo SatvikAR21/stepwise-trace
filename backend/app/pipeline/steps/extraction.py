@@ -11,7 +11,11 @@ from app.tracing.tracer import traced_step
 
 @traced_step(StepName.EXTRACTION)
 def run_extraction(
-    document: NormalizedDocument, llm: LLMClient, *, temperature: float = 0.0
+    document: NormalizedDocument,
+    llm: LLMClient,
+    *,
+    temperature: float = 0.0,
+    max_repair_attempts: int = 1,
 ) -> ExtractedEntities:
     """Extract people, organizations, dates, amounts and key terms from ``document``."""
     return call_structured(
@@ -22,4 +26,5 @@ def run_extraction(
         doc_id=document.doc_id,
         step=StepName.EXTRACTION,
         temperature=temperature,
+        max_repair_attempts=max_repair_attempts,
     )

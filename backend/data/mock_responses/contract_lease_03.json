@@ -1,5 +1,6 @@
 {
   "extraction": {
+    "confidence": 4,
     "people": [
       {"name": "Victor Hale", "role": "Managing Member, Riverside Property Holdings LLC"},
       {"name": "Sofia Marquez", "role": "Owner, Greenleaf Bakery Co."}
@@ -26,10 +27,12 @@
     ]
   },
   "classification": {
+    "confidence": 5,
     "document_type": "contract",
     "rationale": "A commercial lease between a landlord and a tenant with term, rent, deposit and termination provisions."
   },
   "summarization": {
+    "confidence": 5,
     "document_type": "contract",
     "headline": "Five-year lease of Unit 4B, 220 Mill Street, Portland to Greenleaf Bakery Co. at $4,750 per month.",
     "key_points": [

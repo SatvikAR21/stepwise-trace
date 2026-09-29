@@ -1,6 +1,7 @@
 {
   "_comment": "INTENDED FAILURE (propagation_error at summarization): extraction keeps EUR/GBP/USD separate, but the summary adds them into a single 'USD 8,350.00' total that appears nowhere in the document.",
   "extraction": {
+    "confidence": 5,
     "people": [
       {"name": "Anja Keller", "role": "Accounts Receivable"}
     ],
@@ -20,10 +21,12 @@
     "key_terms": ["NTS-2025-088", "multi-currency billing", "no currency conversion", "regulatory translation"]
   },
   "classification": {
+    "confidence": 5,
     "document_type": "invoice",
     "rationale": "An invoice for translation services with an invoice number, line items, amounts and a payment due date."
   },
   "summarization": {
+    "confidence": 4,
     "document_type": "invoice",
     "headline": "Northstar Translation Services invoices Everbright Pharmaceuticals USD 8,350.00 for translation work.",
     "key_points": [

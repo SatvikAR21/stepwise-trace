@@ -6,7 +6,9 @@ an in-memory mapping (handy in tests) or from ``<scripts_dir>/<doc_id>.json`` fi
     {"extraction": {...json object...}, "classification": {...}, "summarization": "raw text"}
 
 Object values are serialized to JSON; string values are returned verbatim, which lets a script
-return deliberately malformed output. Keys starting with ``_`` (e.g. ``_comment``) are ignored.
+return deliberately malformed output. A list holds one answer per attempt (``attempt`` metadata),
+the last one repeating, which lets a script stage a repair. Keys starting with ``_`` (e.g.
+``_comment``) are ignored.
 """
 
 from __future__ import annotations
@@ -17,6 +19,7 @@ from pathlib import Path
 from typing import Any
 
 from app.llm.base import (
+    META_ATTEMPT,
     META_DOC_ID,
     META_STEP,
     LLMClient,
@@ -58,7 +61,8 @@ class MockLLMClient(LLMClient):
         self.calls.append(request)
         doc_id = request.metadata.get(META_DOC_ID, "")
         step = request.metadata.get(META_STEP, "")
-        content = self._render(self._lookup(doc_id, step))
+        attempt = int(request.metadata.get(META_ATTEMPT, "1"))
+        content = self._render(self._for_attempt(self._lookup(doc_id, step), attempt))
         prompt_chars = sum(len(message.content) for message in request.messages)
         usage = TokenUsage(
             prompt_tokens=prompt_chars // _CHARS_PER_TOKEN,
@@ -91,6 +95,14 @@ class MockLLMClient(LLMClient):
         for step, response in data.items():
             if not step.startswith("_"):  # "_comment" etc. document the script
                 self._scripts.setdefault((doc_id, step), response)
+
+    @staticmethod
+    def _for_attempt(script: Any, attempt: int) -> Any:
+        if not isinstance(script, list):
+            return script
+        if not script:
+            raise MockScriptMissingError("mock script list is empty")
+        return script[min(attempt, len(script)) - 1]
 
     @staticmethod
     def _render(response: Any) -> str:

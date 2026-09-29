@@ -1,5 +1,6 @@
 {
   "extraction": {
+    "confidence": 5,
     "people": [
       {"name": "Karen Holt", "role": "Office Manager, Lakeside Dental Clinic"}
     ],
@@ -20,10 +21,12 @@
     "key_terms": ["INV-2025-0412", "Net 30", "office supplies"]
   },
   "classification": {
+    "confidence": 5,
     "document_type": "invoice",
     "rationale": "Requests payment for supplied goods, with an invoice number, line items, total due and payment terms."
   },
   "summarization": {
+    "confidence": 5,
     "document_type": "invoice",
     "headline": "Acme Office Supplies invoices Lakeside Dental Clinic $1,284.50 for office supplies, due June 11, 2025.",
     "key_points": [

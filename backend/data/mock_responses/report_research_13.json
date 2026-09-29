@@ -1,5 +1,6 @@
 {
   "extraction": {
+    "confidence": 5,
     "people": [
       {"name": "Amara Nwosu", "role": "People Analytics"}
     ],
@@ -15,10 +16,12 @@
     "key_terms": ["remote work eligibility", "voluntary turnover", "27% lower turnover", "employee retention", "association not causation"]
   },
   "classification": {
+    "confidence": 4,
     "document_type": "report",
     "rationale": "A research brief with an objective, method, findings, recommendations and limitations."
   },
   "summarization": {
+    "confidence": 4,
     "document_type": "report",
     "headline": "Remote-work eligibility is associated with 27% lower voluntary turnover among Crestline's salaried staff.",
     "key_points": [

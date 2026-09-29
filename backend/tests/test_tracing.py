@@ -18,9 +18,9 @@ from app.tracing.tracer import current_span, span, start_trace, traced_step
 
 DOC = RawDocument(doc_id="d1", content="Invoice 42 from Acme. Total due $10.00.")
 SCRIPTS: dict[tuple[str, str], Any] = {
-    ("d1", "extraction"): {"organizations": [{"name": "Acme"}]},
-    ("d1", "classification"): {"document_type": "invoice", "rationale": "bill"},
-    ("d1", "summarization"): {"headline": "Acme bill", "invoice_number": "42"},
+    ("d1", "extraction"): {"organizations": [{"name": "Acme"}], "confidence": 5},
+    ("d1", "classification"): {"document_type": "invoice", "rationale": "bill", "confidence": 4},
+    ("d1", "summarization"): {"headline": "Acme bill", "invoice_number": "42", "confidence": 5},
 }
 STEPS = ["intake", "extraction", "classification", "summarization"]
 
@@ -55,6 +55,25 @@ def test_trace_records_one_span_per_step_in_order() -> None:
     assert trace.final_output["invoice_number"] == "42"
 
 
+def test_confident_run_is_success_scored_by_its_weakest_step() -> None:
+    _, trace = trace_pipeline(DOC, MockLLMClient(SCRIPTS))
+
+    assert [s.confidence for s in trace.spans] == [None, 5, 4, 5]
+    assert trace.status is TraceStatus.SUCCESS
+    assert trace.status_reasons == []
+    assert trace.final_score == 4
+
+
+def test_repaired_step_makes_the_run_degraded() -> None:
+    scripts = {**SCRIPTS, ("d1", "classification"): ["oops", SCRIPTS[("d1", "classification")]]}
+
+    result, trace = trace_pipeline(DOC, MockLLMClient(scripts))
+
+    assert result.status is PipelineStatus.COMPLETED
+    assert trace.status is TraceStatus.DEGRADED
+    assert trace.status_reasons == ["classification: needed 1 repair attempt(s)"]
+
+
 def test_spans_capture_inputs_outputs_prompts_and_llm_calls() -> None:
     _, trace = trace_pipeline(DOC, MockLLMClient(SCRIPTS))
     intake, extraction, classification, _ = trace.spans
@@ -66,12 +85,13 @@ def test_spans_capture_inputs_outputs_prompts_and_llm_calls() -> None:
 
     assert extraction.input == intake.output
     assert extraction.output["organizations"] == [{"name": "Acme", "role": None}]
-    assert (extraction.prompt_name, extraction.prompt_version) == ("extraction", "1.0.0")
+    assert (extraction.prompt_name, extraction.prompt_version) == ("extraction", "1.1.0")
     call = extraction.llm_calls[0]
     assert call.attempt == 1
     assert [m.role.value for m in call.messages] == ["system", "user"]
     assert DOC.content in call.messages[1].content
     assert json.loads(call.raw_response or "") == SCRIPTS[("d1", "extraction")]
+    assert "confidence" not in (extraction.output or {})
     assert call.model == "mock-llm"
     assert call.prompt_tokens > 0 and call.latency_ms > 0
     assert call.error is None
@@ -88,7 +108,7 @@ def test_common_features_are_logged_for_every_span() -> None:
     assert extraction.features["llm_attempts"] == 1
     assert extraction.features["repair_attempts"] == 0
     assert extraction.features["model"] == "mock-llm"
-    assert extraction.features["prompt_version"] == "1.0.0"
+    assert extraction.features["prompt_version"] == "1.1.0"
     assert extraction.features["prompt_tokens"] == extraction.llm_calls[0].prompt_tokens
 
 
@@ -105,8 +125,8 @@ def test_failed_step_is_recorded_and_later_steps_are_absent() -> None:
     assert failed.status is SpanStatus.ERROR
     assert failed.error is not None and failed.error.error_type == "LLMOutputError"
     assert failed.output is None
-    assert failed.llm_calls[0].raw_response == "Sorry, I can't do that."
-    assert failed.llm_calls[0].error is not None
+    assert [c.raw_response for c in failed.llm_calls] == ["Sorry, I can't do that."] * 2
+    assert all(c.error is not None for c in failed.llm_calls)
     assert "extraction failed: LLMOutputError" in trace.status_reasons
     assert trace.final_output is None
 

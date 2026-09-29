@@ -11,7 +11,11 @@ from app.tracing.tracer import traced_step
 
 @traced_step(StepName.CLASSIFICATION)
 def run_classification(
-    step_input: ClassificationInput, llm: LLMClient, *, temperature: float = 0.0
+    step_input: ClassificationInput,
+    llm: LLMClient,
+    *,
+    temperature: float = 0.0,
+    max_repair_attempts: int = 1,
 ) -> ClassificationResult:
     """Classify the document as contract, invoice, report or correspondence."""
     return call_structured(
@@ -25,4 +29,5 @@ def run_classification(
         doc_id=step_input.document.doc_id,
         step=StepName.CLASSIFICATION,
         temperature=temperature,
+        max_repair_attempts=max_repair_attempts,
     )

@@ -1,5 +1,6 @@
 {
   "extraction": {
+    "confidence": 5,
     "people": [
       {"name": "Samuel Adeyemi", "role": "Site Reliability Engineering Lead"}
     ],
@@ -15,10 +16,12 @@
     "key_terms": ["INC-4471", "Payment API outage", "connection-pool misconfiguration", "timeout errors", "configuration review"]
   },
   "classification": {
+    "confidence": 5,
     "document_type": "report",
     "rationale": "An incident postmortem analysing an outage, its root cause, timeline and action items."
   },
   "summarization": {
+    "confidence": 4,
     "document_type": "report",
     "headline": "A connection-pool misconfiguration caused an 87-minute Payment API outage affecting about 21,000 transactions.",
     "key_points": [

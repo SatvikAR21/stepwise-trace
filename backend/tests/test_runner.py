@@ -79,6 +79,15 @@ def test_malformed_llm_output_is_recorded_with_raw_text() -> None:
     assert result.entities is None
 
 
+def test_repair_attempts_come_from_the_config() -> None:
+    llm = MockLLMClient({**GOOD_SCRIPTS, ("d1", "extraction"): "not JSON"})
+
+    result = run_pipeline(DOC, llm, PipelineConfig(max_repair_attempts=0))
+
+    assert result.status is PipelineStatus.FAILED
+    assert [c.metadata["step"] for c in llm.calls] == ["extraction"]
+
+
 def test_failure_keeps_outputs_of_earlier_steps() -> None:
     scripts = {k: v for k, v in GOOD_SCRIPTS.items() if k[1] != "classification"}
 

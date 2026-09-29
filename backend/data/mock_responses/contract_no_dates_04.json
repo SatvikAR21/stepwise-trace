@@ -1,6 +1,7 @@
 {
   "_comment": "INTENDED FAILURE (extraction_hallucination): the document contains no dates, but extraction invents 'January 1, 2024' as the effective date and the summary repeats it.",
   "extraction": {
+    "confidence": 5,
     "people": [],
     "organizations": [
       {"name": "Meridian Health Partners", "role": "Company"},
@@ -20,10 +21,12 @@
     ]
   },
   "classification": {
+    "confidence": 5,
     "document_type": "contract",
     "rationale": "A consulting agreement between a company and a consultant with compensation, duration, confidentiality and termination clauses."
   },
   "summarization": {
+    "confidence": 4,
     "document_type": "contract",
     "headline": "Alder Strategy Group will assess Meridian Health Partners' patient-intake workflow for $42,000, effective January 1, 2024.",
     "key_points": [

@@ -1,5 +1,6 @@
 {
   "extraction": {
+    "confidence": 5,
     "people": [
       {"name": "Marcus Webb", "role": "Chief Operating Officer, Northwind Logistics Ltd."},
       {"name": "Elena Petrova", "role": "VP of Customer Success, Cobalt Software Solutions Inc."}
@@ -26,10 +27,12 @@
     ]
   },
   "classification": {
+    "confidence": 5,
     "document_type": "contract",
     "rationale": "A master services agreement defining services, fees, service levels, term and termination between a client and a provider."
   },
   "summarization": {
+    "confidence": 5,
     "document_type": "contract",
     "headline": "Cobalt Software Solutions will support Northwind Logistics' fleet-tracking platform for $18,500 per month.",
     "key_points": [

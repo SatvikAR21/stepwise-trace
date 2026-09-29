@@ -19,6 +19,8 @@ from app.pipeline.models import (
     StepName,
 )
 from app.pipeline.runner import PipelineConfig, run_pipeline
+from app.tracing.models import TraceStatus
+from app.tracing.service import trace_pipeline
 
 TAXONOMY = {
     "extraction_hallucination",
@@ -197,6 +199,39 @@ def test_summary_drops_penalty_that_extraction_found(
     assert result.entities is not None and result.summary is not None
     assert "$150,000.00" in [a.raw for a in result.entities.amounts]
     assert "150,000" not in result.summary.model_dump_json()
+
+
+# --------------------------------------------------------------------------- traces of the corpus
+
+DEGRADED = {
+    "ambiguous_amendment_letter_20": ["classification: low confidence (2/5)"],
+}
+
+
+def test_corpus_traces_have_confidence_and_the_expected_status(
+    manifest: DocumentManifest, data_dir: Path, corpus_llm: MockLLMClient
+) -> None:
+    for entry in manifest.documents:
+        _, trace = trace_pipeline(load_document(entry, data_dir), corpus_llm, DEFAULT_CONFIG)
+
+        llm_spans = [s for s in trace.spans if s.llm_calls]
+        assert len(llm_spans) == 3, entry.doc_id
+        assert all(s.confidence is not None for s in llm_spans), entry.doc_id
+        expected = TraceStatus.DEGRADED if entry.doc_id in DEGRADED else TraceStatus.SUCCESS
+        assert trace.status is expected, entry.doc_id
+        assert trace.status_reasons == DEGRADED.get(entry.doc_id, []), entry.doc_id
+
+
+def test_confidently_wrong_runs_still_look_successful(
+    manifest: DocumentManifest, data_dir: Path, corpus_llm: MockLLMClient
+) -> None:
+    """Self-reported confidence cannot catch these: the root-cause analyzer has to."""
+    for doc_id in ("contract_no_dates_04", "invoice_multi_currency_09"):
+        _, trace = trace_pipeline(
+            load_document(manifest.get(doc_id), data_dir), corpus_llm, DEFAULT_CONFIG
+        )
+        assert trace.status is TraceStatus.SUCCESS
+        assert trace.final_score == 4
 
 
 def test_long_report_loses_critical_finding_at_intake(
