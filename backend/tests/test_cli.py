@@ -12,9 +12,15 @@ from app.pipeline import cli
 
 
 @pytest.fixture(autouse=True)
-def _mock_settings(monkeypatch: pytest.MonkeyPatch, data_dir: Path) -> None:
-    test_settings = Settings(_env_file=None, data_dir=data_dir)
+def _mock_settings(monkeypatch: pytest.MonkeyPatch, data_dir: Path, tmp_path: Path) -> Settings:
+    test_settings = Settings(
+        _env_file=None,
+        data_dir=data_dir,
+        traces_dir=tmp_path / "traces",
+        database_path=tmp_path / "traces.db",
+    )
     monkeypatch.setattr(cli, "get_settings", lambda: test_settings)
+    return test_settings
 
 
 def test_list_prints_every_document(capsys: pytest.CaptureFixture[str]) -> None:
@@ -28,21 +34,76 @@ def test_list_prints_every_document(capsys: pytest.CaptureFixture[str]) -> None:
     )
 
 
-def test_run_one_prints_pipeline_result_json(capsys: pytest.CaptureFixture[str]) -> None:
+def test_run_one_prints_result_json_and_saves_a_trace(
+    capsys: pytest.CaptureFixture[str], tmp_path: Path
+) -> None:
     assert cli.main(["run", "invoice_simple_06"]) == 0
 
-    result = json.loads(capsys.readouterr().out)
+    captured = capsys.readouterr()
+    result = json.loads(captured.out)
     assert result["status"] == "completed"
     assert result["summary"]["total_amount"]["raw"] == "$1,284.50"
+    assert "success (score 5)" in captured.err
+    (saved,) = (tmp_path / "traces").glob("*.json")
+    assert saved.stem in captured.err
 
 
-def test_run_all_prints_table_and_flags_mismatches(capsys: pytest.CaptureFixture[str]) -> None:
+def test_run_one_reports_why_a_trace_is_degraded(capsys: pytest.CaptureFixture[str]) -> None:
+    cli.main(["run", "ambiguous_amendment_letter_20"])
+
+    assert "degraded (score 2): classification: low confidence (2/5)" in capsys.readouterr().err
+
+
+def test_run_all_prints_table_and_saves_every_trace(
+    capsys: pytest.CaptureFixture[str], tmp_path: Path
+) -> None:
     assert cli.main(["run", "--all"]) == 0
 
     out = capsys.readouterr().out
-    assert "21 documents, 0 pipeline error(s)" in out
+    assert "21 documents, 0 pipeline error(s), 2 degraded" in out
     assert out.count("type mismatch") == 3
     assert "input truncated" in out
+    assert len(list((tmp_path / "traces").glob("*.json"))) == 21
+
+
+def test_traces_list_filters_by_status(capsys: pytest.CaptureFixture[str]) -> None:
+    cli.main(["run", "--all"])
+    capsys.readouterr()
+
+    assert cli.main(["traces", "list", "--status", "degraded"]) == 0
+
+    out = capsys.readouterr().out
+    assert "2 of 2 trace(s)" in out
+    assert "report_supplier_risk_long_15" in out
+    assert "ambiguous_amendment_letter_20" in out
+
+
+def test_traces_list_by_document_with_limit(capsys: pytest.CaptureFixture[str]) -> None:
+    for _ in range(2):
+        cli.main(["run", "invoice_simple_06"])
+    capsys.readouterr()
+
+    cli.main(["traces", "list", "--doc", "invoice_simple_06", "--limit", "1"])
+
+    assert "1 of 2 trace(s)" in capsys.readouterr().out
+
+
+def test_traces_show_prints_one_trace(capsys: pytest.CaptureFixture[str], tmp_path: Path) -> None:
+    cli.main(["run", "invoice_simple_06"])
+    capsys.readouterr()
+    (saved,) = (tmp_path / "traces").glob("*.json")
+
+    assert cli.main(["traces", "show", saved.stem]) == 0
+
+    trace = json.loads(capsys.readouterr().out)
+    assert trace["trace_id"] == saved.stem
+    assert len(trace["spans"]) == 4
+
+
+def test_traces_show_unknown_id_fails(capsys: pytest.CaptureFixture[str]) -> None:
+    assert cli.main(["traces", "show", "0" * 32]) == 1
+
+    assert "no trace with id" in capsys.readouterr().err
 
 
 def test_provider_override_is_applied() -> None:
