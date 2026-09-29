@@ -19,6 +19,7 @@ dev = [
     "ruff>=0.6",
     "mypy>=1.11",
     "httpx2>=2.13.1",
+    "pre-commit>=4.0",
 ]
 
 [build-system]
