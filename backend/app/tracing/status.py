@@ -1,8 +1,8 @@
 """Rules that turn a finished run's spans into a status and a score.
 
 - failure:  a step raised an error, so the pipeline stopped.
-- degraded: the run finished but something is suspicious: a step's confidence is low (<= 2) or
-            missing, an LLM answer needed a repair attempt, or the input was truncated.
+- degraded: the run finished but something is suspicious: a step's confidence is low (<= 2),
+            missing or invalid, an LLM answer needed a repair attempt, or the input was truncated.
 - success:  none of the above.
 
 The final score is the lowest confidence of any step (the weakest link). A confidently wrong run
@@ -42,7 +42,7 @@ def assess(spans: list[Span], pipeline_status: PipelineStatus) -> Assessment:
             reasons.append(f"{span.name}: needed {len(span.llm_calls) - 1} repair attempt(s)")
         if span.status is SpanStatus.OK:
             if span.confidence is None:
-                reasons.append(f"{span.name}: confidence missing")
+                reasons.append(f"{span.name}: confidence {span.confidence_note or 'missing'}")
             elif span.confidence <= LOW_CONFIDENCE:
                 reasons.append(f"{span.name}: low confidence ({span.confidence}/5)")
 

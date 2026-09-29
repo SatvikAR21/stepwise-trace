@@ -68,6 +68,15 @@ def test_missing_confidence_makes_the_run_degraded() -> None:
     assert verdict.final_score is None
 
 
+def test_invalid_confidence_is_reported_as_invalid() -> None:
+    span = _span("extraction", confidence_note="invalid: 'high'")
+
+    verdict = assess([span], PipelineStatus.COMPLETED)
+
+    assert verdict.status is TraceStatus.DEGRADED
+    assert verdict.reasons == ["extraction: confidence invalid: 'high'"]
+
+
 def test_repair_and_truncation_make_the_run_degraded() -> None:
     spans = [
         _span("intake", calls=0, features={"truncated": True}),
