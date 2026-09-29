@@ -9,7 +9,7 @@
   "status_reasons": [],
   "final_score": 5,
   "pipeline_status": "completed",
-  "failing_step": null,
+  "error_step": null,
   "spans": [
     {
       "span_id": "d5ffa010cff6940d",

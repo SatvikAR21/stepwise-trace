@@ -79,7 +79,7 @@ def test_list_is_newest_first_with_summary_fields(store: TraceStore, base_trace:
     assert first.status is TraceStatus.SUCCESS
     assert first.final_score == 4
     assert first.model == "mock-llm"
-    assert first.failing_step is None
+    assert first.error_step is None
 
 
 def test_list_filters_by_status_and_document(store: TraceStore, base_trace: Trace) -> None:

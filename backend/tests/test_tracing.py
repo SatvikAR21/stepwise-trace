@@ -51,7 +51,7 @@ def test_trace_records_one_span_per_step_in_order() -> None:
     assert trace.doc_id == "d1"
     assert trace.model == "mock-llm"
     assert trace.pipeline_status is PipelineStatus.COMPLETED
-    assert trace.failing_step is None
+    assert trace.error_step is None
     assert trace.final_output["invoice_number"] == "42"
 
 
@@ -119,7 +119,7 @@ def test_failed_step_is_recorded_and_later_steps_are_absent() -> None:
 
     assert result.status is PipelineStatus.FAILED
     assert trace.status is TraceStatus.FAILURE
-    assert trace.failing_step is StepName.EXTRACTION
+    assert trace.error_step is StepName.EXTRACTION
     assert [s.name for s in trace.spans] == ["intake", "extraction"]
     failed = trace.spans[1]
     assert failed.status is SpanStatus.ERROR

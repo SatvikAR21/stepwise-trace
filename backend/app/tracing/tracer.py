@@ -178,7 +178,7 @@ class TraceRecorder:
             status_reasons=verdict.reasons,
             final_score=verdict.final_score,
             pipeline_status=result.status,
-            failing_step=result.error.step if result.error else None,
+            error_step=result.error.step if result.error else None,
             spans=self.spans,
             final_output=_to_jsonable(result.summary),
         )

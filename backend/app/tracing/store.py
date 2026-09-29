@@ -37,7 +37,7 @@ class TraceRow(_Base):
     status: Mapped[str] = mapped_column(String(16), index=True)
     final_score: Mapped[int | None]
     pipeline_status: Mapped[str] = mapped_column(String(16))
-    failing_step: Mapped[str | None] = mapped_column(String(32))
+    error_step: Mapped[str | None] = mapped_column(String(32))
     model: Mapped[str] = mapped_column(String(100))
     duration_ms: Mapped[float]
 
@@ -51,7 +51,7 @@ class TraceSummary(BaseModel):
     status: TraceStatus
     final_score: int | None
     pipeline_status: PipelineStatus
-    failing_step: StepName | None
+    error_step: StepName | None
     model: str
     duration_ms: float
 
@@ -141,7 +141,7 @@ def _to_row(trace: Trace) -> TraceRow:
         status=trace.status.value,
         final_score=trace.final_score,
         pipeline_status=trace.pipeline_status.value,
-        failing_step=trace.failing_step.value if trace.failing_step else None,
+        error_step=trace.error_step.value if trace.error_step else None,
         model=trace.model,
         duration_ms=trace.duration_ms,
     )
@@ -155,7 +155,7 @@ def _to_summary(row: TraceRow) -> TraceSummary:
         status=TraceStatus(row.status),
         final_score=row.final_score,
         pipeline_status=PipelineStatus(row.pipeline_status),
-        failing_step=StepName(row.failing_step) if row.failing_step else None,
+        error_step=StepName(row.error_step) if row.error_step else None,
         model=row.model,
         duration_ms=row.duration_ms,
     )

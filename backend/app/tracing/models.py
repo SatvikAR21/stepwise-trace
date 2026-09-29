@@ -96,6 +96,9 @@ class Trace(BaseModel):
         default=None, ge=1, le=5, description="Lowest step confidence: the weakest link"
     )
     pipeline_status: PipelineStatus
-    failing_step: StepName | None = None
+    error_step: StepName | None = Field(
+        default=None,
+        description="The step that raised an error and stopped the run (not the root cause)",
+    )
     spans: list[Span] = Field(default_factory=list)
     final_output: Any = None

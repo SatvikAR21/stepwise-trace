@@ -11,7 +11,7 @@
   ],
   "final_score": 2,
   "pipeline_status": "completed",
-  "failing_step": null,
+  "error_step": null,
   "spans": [
     {
       "span_id": "3d70cb15b5b20a90",
