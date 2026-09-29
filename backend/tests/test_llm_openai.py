@@ -115,5 +115,31 @@ def test_no_choices_raises_provider_error() -> None:
 def test_http_errors_become_provider_errors(status: int, error_name: str) -> None:
     client = _client(lambda _: httpx2.Response(status, json={"error": {"message": "nope"}}))
 
-    with pytest.raises(LLMProviderError, match=error_name):
+    with pytest.raises(LLMProviderError, match=error_name) as info:
         client.complete(_request())
+
+    assert info.value.status_code == status
+    assert info.value.retry_after_s is None
+
+
+@pytest.mark.parametrize(
+    ("headers", "message", "expected"),
+    [
+        ({"retry-after": "7"}, "slow down", 7.0),
+        ({"retry-after-ms": "1500"}, "slow down", 1.5),
+        ({"retry-after": "Wed, 21 Oct 2026 07:28:00 GMT"}, "Please retry in 20.5s.", 20.5),
+        ({}, 'quota exceeded, "retryDelay": "31s"', 31.0),
+    ],
+)
+def test_rate_limit_error_carries_the_requested_delay(
+    headers: dict[str, str], message: str, expected: float
+) -> None:
+    client = _client(
+        lambda _: httpx2.Response(429, headers=headers, json={"error": {"message": message}})
+    )
+
+    with pytest.raises(LLMProviderError) as info:
+        client.complete(_request())
+
+    assert info.value.status_code == 429
+    assert info.value.retry_after_s == expected

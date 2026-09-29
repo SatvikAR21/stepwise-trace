@@ -57,6 +57,7 @@ class LLMResponse(BaseModel):
     model: str
     usage: TokenUsage = Field(default_factory=TokenUsage)
     latency_ms: float = Field(default=0.0, ge=0.0)
+    wait_ms: float = Field(default=0.0, ge=0.0, description="Time spent waiting for a rate limit")
 
 
 class LLMError(Exception):
@@ -64,7 +65,18 @@ class LLMError(Exception):
 
 
 class LLMProviderError(LLMError):
-    """The provider could not be reached or returned an error (network, auth, rate limit...)."""
+    """The provider could not be reached or returned an error (network, auth, rate limit...).
+
+    ``status_code`` is the HTTP status when there was one (429 = too many requests), and
+    ``retry_after_s`` is how long the provider asked us to wait, when it said so.
+    """
+
+    def __init__(
+        self, message: str, *, status_code: int | None = None, retry_after_s: float | None = None
+    ) -> None:
+        super().__init__(message)
+        self.status_code = status_code
+        self.retry_after_s = retry_after_s
 
 
 class LLMOutputError(LLMError):

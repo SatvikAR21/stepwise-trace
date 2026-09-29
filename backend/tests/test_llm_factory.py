@@ -8,6 +8,7 @@ from app.core.config import LLMProvider, Settings
 from app.llm.factory import build_llm_client
 from app.llm.mock import MockLLMClient
 from app.llm.openai_compatible import OpenAICompatibleClient
+from app.llm.throttle import ThrottledLLMClient
 
 
 def _settings(**overrides: object) -> Settings:
@@ -30,6 +31,15 @@ def test_openai_provider_builds_real_client() -> None:
 
     assert isinstance(client, OpenAICompatibleClient)
     assert client.model_name == "gemini-3.5-flash"
+
+
+def test_max_rpm_wraps_the_real_client_in_a_throttle() -> None:
+    client = build_llm_client(
+        _settings(llm_provider="openai", llm_api_key="k", llm_model="m", llm_max_rpm=5)
+    )
+
+    assert isinstance(client, ThrottledLLMClient)
+    assert client.model_name == "m"
 
 
 def test_openai_provider_without_key_fails_fast() -> None:

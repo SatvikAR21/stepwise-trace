@@ -98,6 +98,7 @@ def _record_call(
             prompt_tokens=response.usage.prompt_tokens if response else 0,
             completion_tokens=response.usage.completion_tokens if response else 0,
             latency_ms=response.latency_ms if response else 0.0,
+            wait_ms=response.wait_ms if response else 0.0,
             error=error,
         )
     )

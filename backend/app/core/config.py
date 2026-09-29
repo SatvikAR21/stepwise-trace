@@ -59,6 +59,7 @@ class Settings(BaseSettings):
     llm_timeout_s: float = Field(default=60.0, gt=0)
     llm_max_retries: int = Field(default=3, ge=0)
     llm_max_repair_attempts: int = Field(default=1, ge=0, le=3)
+    llm_max_rpm: int = Field(default=0, ge=0, description="Requests per minute; 0 = no limit")
 
     intake_max_chars: int = Field(default=6000, gt=0)
 

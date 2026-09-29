@@ -29,6 +29,7 @@ def _isolate_env(monkeypatch: pytest.MonkeyPatch) -> Iterator[None]:
         "LLM_TIMEOUT_S",
         "LLM_MAX_RETRIES",
         "LLM_MAX_REPAIR_ATTEMPTS",
+        "LLM_MAX_RPM",
         "INTAKE_MAX_CHARS",
         "DATA_DIR",
         "TRACES_DIR",

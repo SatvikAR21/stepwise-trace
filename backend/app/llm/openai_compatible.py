@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 import time
 
 import httpx2
@@ -17,6 +18,23 @@ from app.llm.base import (
     Role,
     TokenUsage,
 )
+
+# Gemini puts the wait in the error text ("Please retry in 20.5s", "retryDelay": "20s").
+_RETRY_IN_TEXT_RE = re.compile(r'(?:retry in |"retryDelay":\s*")(\d+(?:\.\d+)?)\s*s', re.I)
+
+
+def _retry_after_seconds(exc: openai.APIStatusError) -> float | None:
+    """How long the provider asked us to wait: standard headers first, then the error text."""
+    headers = exc.response.headers
+    for name, scale in (("retry-after-ms", 0.001), ("retry-after", 1.0)):
+        value = headers.get(name)
+        if value is not None:
+            try:
+                return float(value) * scale
+            except ValueError:
+                continue  # e.g. an HTTP date instead of seconds
+    match = _RETRY_IN_TEXT_RE.search(str(exc))
+    return float(match.group(1)) if match else None
 
 
 def _to_openai_message(message: ChatMessage) -> ChatCompletionMessageParam:
@@ -69,6 +87,12 @@ class OpenAICompatibleClient(LLMClient):
                 temperature=request.temperature,
                 response_format={"type": "json_object"} if request.json_mode else openai.omit,
             )
+        except openai.APIStatusError as exc:
+            raise LLMProviderError(
+                f"{type(exc).__name__}: {exc}",
+                status_code=exc.status_code,
+                retry_after_s=_retry_after_seconds(exc),
+            ) from exc
         except openai.OpenAIError as exc:
             raise LLMProviderError(f"{type(exc).__name__}: {exc}") from exc
         latency_ms = (time.perf_counter() - started) * 1000
