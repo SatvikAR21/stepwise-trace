@@ -2,6 +2,11 @@
   "trace_id": "cfd2f9a04e02e64bdab90857558410cf",
   "doc_id": "ambiguous_amendment_letter_20",
   "model": "mock-llm",
+  "config": {
+    "intake_max_chars": 6000,
+    "temperature": 0.0,
+    "max_repair_attempts": 1
+  },
   "started_at": "2026-09-29T05:32:09.225498Z",
   "ended_at": "2026-09-29T05:32:09.227950Z",
   "duration_ms": 3.3447000314481556,
@@ -39,6 +44,7 @@
       },
       "prompt_name": null,
       "prompt_version": null,
+      "repair_prompt_version": null,
       "llm_calls": [],
       "confidence": null,
       "confidence_note": null,
@@ -140,6 +146,7 @@
       },
       "prompt_name": "extraction",
       "prompt_version": "1.1.0",
+      "repair_prompt_version": null,
       "llm_calls": [
         {
           "attempt": 1,
@@ -281,6 +288,7 @@
       },
       "prompt_name": "classification",
       "prompt_version": "1.1.0",
+      "repair_prompt_version": null,
       "llm_calls": [
         {
           "attempt": 1,
@@ -429,6 +437,7 @@
       },
       "prompt_name": "summarization",
       "prompt_version": "1.1.0",
+      "repair_prompt_version": null,
       "llm_calls": [
         {
           "attempt": 1,

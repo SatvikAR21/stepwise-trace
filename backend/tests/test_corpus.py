@@ -5,9 +5,11 @@ from __future__ import annotations
 import json
 from collections import Counter
 from pathlib import Path
+from typing import Any
 
 import pytest
 
+from app.core.config import REPO_ROOT
 from app.llm.mock import MockLLMClient
 from app.pipeline.documents import DocumentManifest, ManifestEntry, load_document, load_manifest
 from app.pipeline.models import (
@@ -20,7 +22,7 @@ from app.pipeline.models import (
     StepName,
 )
 from app.pipeline.runner import run_pipeline
-from app.tracing.models import TraceStatus
+from app.tracing.models import Trace, TraceStatus
 from app.tracing.service import trace_pipeline
 
 TAXONOMY = {
@@ -234,6 +236,34 @@ def test_confidently_wrong_runs_still_look_successful(
         )
         assert trace.status is TraceStatus.SUCCESS
         assert trace.final_score == 4
+
+
+_RUN_SPECIFIC = {"trace_id", "span_id", "parent_span_id", "started_at", "ended_at", "duration_ms"}
+
+
+def _stable(value: Any) -> Any:
+    """A trace as JSON without the ids, times and durations that differ on every run."""
+    if isinstance(value, dict):
+        return {k: _stable(v) for k, v in value.items() if k not in _RUN_SPECIFIC}
+    if isinstance(value, list):
+        return [_stable(v) for v in value]
+    return value
+
+
+def test_committed_sample_traces_match_what_the_code_produces(
+    manifest: DocumentManifest, data_dir: Path, corpus_llm: MockLLMClient
+) -> None:
+    """If this fails, refresh the sample: ``uv run python -m app.pipeline.cli run <doc_id>`` and
+    copy the new file from ``traces/`` to ``traces/samples/<doc_id>.json``."""
+    samples = sorted((REPO_ROOT / "traces" / "samples").glob("*.json"))
+    assert samples
+    for path in samples:
+        sample = Trace.model_validate_json(path.read_text(encoding="utf-8"))
+        _, fresh = trace_pipeline(
+            load_document(manifest.get(sample.doc_id), data_dir), corpus_llm, DEFAULT_CONFIG
+        )
+        assert path.stem == sample.doc_id
+        assert _stable(sample.model_dump(mode="json")) == _stable(fresh.model_dump(mode="json"))
 
 
 def test_long_report_loses_critical_finding_at_intake(

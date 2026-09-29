@@ -2,6 +2,11 @@
   "trace_id": "ace75fef12a48a7432595486de885054",
   "doc_id": "invoice_simple_06",
   "model": "mock-llm",
+  "config": {
+    "intake_max_chars": 6000,
+    "temperature": 0.0,
+    "max_repair_attempts": 1
+  },
   "started_at": "2026-09-29T05:32:09.214981Z",
   "ended_at": "2026-09-29T05:32:09.220053Z",
   "duration_ms": 6.002200010698289,
@@ -37,6 +42,7 @@
       },
       "prompt_name": null,
       "prompt_version": null,
+      "repair_prompt_version": null,
       "llm_calls": [],
       "confidence": null,
       "confidence_note": null,
@@ -134,6 +140,7 @@
       },
       "prompt_name": "extraction",
       "prompt_version": "1.1.0",
+      "repair_prompt_version": null,
       "llm_calls": [
         {
           "attempt": 1,
@@ -271,6 +278,7 @@
       },
       "prompt_name": "classification",
       "prompt_version": "1.1.0",
+      "repair_prompt_version": null,
       "llm_calls": [
         {
           "attempt": 1,
@@ -421,6 +429,7 @@
       },
       "prompt_name": "summarization",
       "prompt_version": "1.1.0",
+      "repair_prompt_version": null,
       "llm_calls": [
         {
           "attempt": 1,
