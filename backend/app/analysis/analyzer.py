@@ -191,7 +191,8 @@ def _excerpt(value: Any) -> str | None:
 
 
 def _issue(finding: StepFinding, problems: list[str]) -> str:
-    return f"{step_label(finding.step)}: {problems[0]}" if problems else step_label(finding.step)
+    # Callers pass a non-empty list: every propagated, secondary or minor step has a problem.
+    return f"{step_label(finding.step)}: {problems[0].strip().rstrip('.')}"
 
 
 def _sentence(text: str) -> str:

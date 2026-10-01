@@ -223,6 +223,23 @@ def test_analysis_records_the_judge_and_its_calls(
     assert analysis.root_cause_step is None
 
 
+def test_a_problem_written_as_a_full_sentence_gets_no_double_full_stop(
+    data_dir: Path, corpus_llm: MockLLMClient
+) -> None:
+    judge = _judge(
+        NO_DATES,
+        _grade("intake"),
+        _grade("extraction", 1, **INVENTED),
+        _grade("classification"),
+        _grade("summarization", 5, inherited=["Repeats the invented date."]),
+    )
+
+    analysis = analyze_trace(_trace(NO_DATES, data_dir, corpus_llm), judge)
+
+    assert analysis.summary.endswith("Step 4 (Summarization): Repeats the invented date.")
+    assert ".." not in analysis.summary
+
+
 def test_step_labels() -> None:
     assert step_label(StepName.INTAKE) == "Step 1 (Intake)"
     assert step_label(StepName.SUMMARIZATION) == "Step 4 (Summarization)"

@@ -40,6 +40,7 @@ SCRIPTED_BANNER = (
     "SCRIPTED JUDGE (JUDGE_PROVIDER=mock): its verdicts were written to agree with the answer "
     "key, so this is NOT a measurement."
 )
+_VERDICT_WIDTH = 33  # fits the longest "step/category", classification/misclassification
 _SHORT_CATEGORY = {
     FailureCategory.EXTRACTION_HALLUCINATION: "hallucination",
     FailureCategory.MISCLASSIFICATION: "misclassification",
@@ -315,7 +316,10 @@ def _cmd_evaluate(
         "The pipeline always runs on the scripted mock LLM here: the planted failures live in its "
         "scripts.\n"
     )
-    print(f"{'DOC_ID':<34} {'SPLIT':<9} {'PLANTED':<28} {'DIAGNOSED':<28} {'OUTCOME':<12} CALLS")
+    print(
+        f"{'DOC_ID':<34} {'SPLIT':<9} {'PLANTED':<{_VERDICT_WIDTH}} "
+        f"{'DIAGNOSED':<{_VERDICT_WIDTH}} {'OUTCOME':<12} CALLS"
+    )
     analyses = AnalysisStore(analyses_dir(settings.traces_dir), settings.database_path)
     try:
         report = evaluate_corpus(
@@ -356,11 +360,11 @@ def _print_row(row: DocResult) -> None:
     planted = _step_and_category(row.planted_step, row.planted_category)
     found = _step_and_category(row.diagnosed_step, row.diagnosed_category)
     if row.outcome.value == "not-judged":
-        found = f"({row.note})"[:28]
+        found = f"({row.note})"[:_VERDICT_WIDTH]
     calls = "reused" if row.reused_verdict else str(row.judge_calls)
     print(
-        f"{row.doc_id:<34} {row.split.value:<9} {planted:<28} {found:<28} "
-        f"{row.outcome.value:<12} {calls}"
+        f"{row.doc_id:<34} {row.split.value:<9} {planted:<{_VERDICT_WIDTH}} "
+        f"{found:<{_VERDICT_WIDTH}} {row.outcome.value:<12} {calls}"
     )
 
 
