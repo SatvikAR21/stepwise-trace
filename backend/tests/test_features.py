@@ -118,12 +118,19 @@ def test_summary_numbers_not_in_the_document_are_counted() -> None:
 
 # --------------------------------------------------------------------------- on the real corpus
 
-UNGROUNDED_ENTITIES = {"contract_no_dates_04": 1, "correspondence_unnamed_ceo_19": 1}
+UNGROUNDED_ENTITIES = {
+    "contract_no_dates_04": 1,
+    "correspondence_unnamed_ceo_19": 1,
+    "report_undisclosed_cost_22": 1,  # the invented USD 250,000
+}
 UNGROUNDED_SUMMARY_NUMBERS = {
     "contract_no_dates_04": 1,  # the invented year 2024
     "invoice_multi_currency_09": 1,  # the wrong total 8,350.00
     "report_postmortem_12": 1,  # known false alarm: a correctly computed 87-minute duration
+    "report_undisclosed_cost_22": 1,  # the invented 250,000, repeated from extraction
+    "report_growth_rate_31": 1,  # known false alarm: a correctly computed 25% growth
 }
+CRASHED = {"report_broken_answer_28"}  # stops in extraction: no extraction clues, no summary
 
 
 @pytest.fixture(scope="module")
@@ -144,21 +151,27 @@ def test_corpus_grounding_flags_exactly_the_invented_entities(
 ) -> None:
     for doc_id, trace in corpus_traces.items():
         extraction = trace.spans[1]
+        if doc_id in CRASHED:  # only the common clues (time, tokens, attempts) were recorded
+            assert "entities_ungrounded" not in extraction.features
+            continue
         assert extraction.features["entities_ungrounded"] == UNGROUNDED_ENTITIES.get(doc_id, 0), (
             doc_id
         )
 
 
-def test_corpus_summary_numbers_flag_invented_values_and_one_known_false_alarm(
+def test_corpus_summary_numbers_flag_invented_values_and_two_known_false_alarms(
     corpus_traces: dict[str, Trace],
 ) -> None:
     for doc_id, trace in corpus_traces.items():
+        if doc_id in CRASHED:
+            assert len(trace.spans) == 2  # intake + the failed extraction
+            continue
         summary = trace.spans[3]
         expected = UNGROUNDED_SUMMARY_NUMBERS.get(doc_id, 0)
         assert summary.features["summary_numbers_ungrounded"] == expected, doc_id
 
 
-def test_only_the_long_report_is_truncated(corpus_traces: dict[str, Trace]) -> None:
+def test_only_the_two_long_documents_are_truncated(corpus_traces: dict[str, Trace]) -> None:
     truncated = {d for d, t in corpus_traces.items() if t.spans[0].features["truncated"] is True}
 
-    assert truncated == {"report_supplier_risk_long_15"}
+    assert truncated == {"report_supplier_risk_long_15", "contract_long_liability_29"}

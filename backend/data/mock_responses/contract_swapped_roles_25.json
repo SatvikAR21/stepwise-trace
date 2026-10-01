@@ -1,0 +1,46 @@
+{
+  "_comment": "INTENDED FAILURE (propagation_error at summarization): extraction correctly marks Westgate as Landlord and Brightside as Tenant; the summary swaps the roles, so the wrong party pays rent and the deposit.",
+  "extraction": {
+    "confidence": 5,
+    "people": [
+      {"name": "Daniel Reyes", "role": "Managing Member, Westgate Property Holdings LLC (Landlord)"},
+      {"name": "Amara Okafor", "role": "Owner, Brightside Bakery Co. (Tenant)"}
+    ],
+    "organizations": [
+      {"name": "Westgate Property Holdings LLC", "role": "Landlord"},
+      {"name": "Brightside Bakery Co.", "role": "Tenant"}
+    ],
+    "dates": [
+      {"raw": "April 7, 2025", "iso_date": "2025-04-07", "context": "Lease signed"},
+      {"raw": "May 1, 2025", "iso_date": "2025-05-01", "context": "Lease term starts"}
+    ],
+    "amounts": [
+      {"raw": "$3,400.00", "value": 3400.00, "currency": "USD", "context": "Monthly rent paid by the Tenant to the Landlord"},
+      {"raw": "$6,800.00", "value": 6800.00, "currency": "USD", "context": "Security deposit paid by the Tenant"}
+    ],
+    "key_terms": ["commercial lease", "three-year term", "security deposit returned within 30 days", "six months' notice after the first year"]
+  },
+  "classification": {
+    "confidence": 5,
+    "document_type": "contract",
+    "rationale": "A signed commercial lease between a landlord and a tenant with rent, deposit, maintenance and termination terms."
+  },
+  "summarization": {
+    "confidence": 5,
+    "document_type": "contract",
+    "headline": "Brightside Bakery Co. leases its retail unit at 48 Mill Street to Westgate Property Holdings LLC for $3,400.00 a month.",
+    "key_points": [
+      "Three-year term from May 1, 2025.",
+      "Westgate Property Holdings pays a $6,800.00 security deposit."
+    ],
+    "parties": ["Brightside Bakery Co. (Landlord)", "Westgate Property Holdings LLC (Tenant)"],
+    "effective_date": "2025-05-01",
+    "term": "Three years",
+    "key_obligations": [
+      "Westgate Property Holdings LLC pays monthly rent of $3,400.00 to Brightside Bakery Co.",
+      "Brightside Bakery Co. maintains the roof and structure",
+      "Westgate Property Holdings LLC maintains the interior"
+    ],
+    "termination_terms": "Either party may end the lease with six months' written notice after the first year."
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "_comment": "INTENDED FAILURE (context_loss at extraction): the real deadline (return the signed form by August 8, 2025, or lose the room) is only in the P.S.; extraction misses it, so the summary has no deadline either.",
+  "extraction": {
+    "confidence": 5,
+    "people": [
+      {"name": "Tomasz Novak", "role": "Recipient, student"},
+      {"name": "Helen Fairburn", "role": "Accommodation Manager, Marlow College"}
+    ],
+    "organizations": [
+      {"name": "Marlow College", "role": "Sender's institution"},
+      {"name": "Elmhurst Hall", "role": "Residence hall"}
+    ],
+    "dates": [
+      {"raw": "July 25, 2025", "iso_date": "2025-07-25", "context": "Email date"},
+      {"raw": "September 20, 2025", "iso_date": "2025-09-20", "context": "Check-in available from"}
+    ],
+    "amounts": [
+      {"raw": "$215.00", "value": 215.00, "currency": "USD", "context": "Weekly rent"}
+    ],
+    "key_terms": ["single en-suite room", "2025-26 academic year", "rent payable each term in advance"]
+  },
+  "classification": {
+    "confidence": 5,
+    "document_type": "correspondence",
+    "rationale": "An email from a college housing office to a student offering a room."
+  },
+  "summarization": {
+    "confidence": 5,
+    "document_type": "correspondence",
+    "headline": "Marlow College offers Tomasz Novak a room at Elmhurst Hall for 2025-26 at $215.00 a week.",
+    "key_points": [
+      "Single en-suite room, ready for check-in from September 20, 2025.",
+      "Rent is payable each term in advance."
+    ],
+    "sender": "Helen Fairburn, Marlow College",
+    "recipient": "Tomasz Novak",
+    "purpose": "Offer a room at Elmhurst Hall",
+    "action_items": [
+      "Check in from September 20, 2025",
+      "Pay the rent each term in advance"
+    ]
+  }
+}

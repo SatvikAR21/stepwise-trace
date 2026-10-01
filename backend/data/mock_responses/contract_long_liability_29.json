@@ -1,0 +1,45 @@
+{
+  "_comment": "INTENDED FAILURE (context_loss at intake): Intake truncates at 6000 chars, inside Section 12. Section 14 (a $95,000.00 early termination fee that overrides the 90-day termination for convenience) is cut, so later steps never see it and the summary describes termination without the fee.",
+  "extraction": {
+    "confidence": 5,
+    "people": [],
+    "organizations": [
+      {"name": "Copperline Systems Inc.", "role": "Provider"},
+      {"name": "Ridgeway Regional Hospital", "role": "Client"}
+    ],
+    "dates": [
+      {"raw": "June 2, 2025", "iso_date": "2025-06-02", "context": "Signing Date"},
+      {"raw": "September 30, 2025", "iso_date": "2025-09-30", "context": "Implementation completion deadline"},
+      {"raw": "October 1, 2025", "iso_date": "2025-10-01", "context": "Subscription fee and 36-month term start"}
+    ],
+    "amounts": [
+      {"raw": "$48,000.00", "value": 48000.00, "currency": "USD", "context": "One-time implementation fee"},
+      {"raw": "$12,500.00", "value": 12500.00, "currency": "USD", "context": "Monthly subscription and support fee"}
+    ],
+    "key_terms": ["99.5% availability", "service credits", "36-month term with 12-month renewals", "90 days' notice for convenience", "liability capped at 12 months of fees"]
+  },
+  "classification": {
+    "confidence": 5,
+    "document_type": "contract",
+    "rationale": "A software implementation and support agreement between a provider and a hospital with fees, term, service levels and termination clauses."
+  },
+  "summarization": {
+    "confidence": 5,
+    "document_type": "contract",
+    "headline": "Copperline Systems will implement and support its scheduling platform for Ridgeway Regional Hospital for 36 months at $12,500.00 a month.",
+    "key_points": [
+      "One-time implementation fee of $48,000.00.",
+      "Implementation due by September 30, 2025.",
+      "99.5% monthly availability, with service credits if missed."
+    ],
+    "parties": ["Copperline Systems Inc.", "Ridgeway Regional Hospital"],
+    "effective_date": "2025-06-02",
+    "term": "36 months from October 1, 2025, renewing for 12-month periods",
+    "key_obligations": [
+      "Provider configures the platform, migrates records and trains up to 120 staff",
+      "Client pays $12,500.00 per month from October 1, 2025",
+      "Provider notifies Client of data breaches within 24 hours"
+    ],
+    "termination_terms": "Either party may terminate for convenience with 90 days' written notice, or immediately for a material breach not cured within 30 days."
+  }
+}

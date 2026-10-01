@@ -28,7 +28,7 @@ def test_list_prints_every_document(capsys: pytest.CaptureFixture[str]) -> None:
 
     lines = capsys.readouterr().out.strip().splitlines()
     assert lines[0].startswith("DOC_ID")
-    assert len(lines) == 22
+    assert len(lines) == 33
     assert any(
         "contract_no_dates_04" in line and "extraction_hallucination" in line for line in lines
     )
@@ -57,13 +57,14 @@ def test_run_one_reports_why_a_trace_is_degraded(capsys: pytest.CaptureFixture[s
 def test_run_all_prints_table_and_saves_every_trace(
     capsys: pytest.CaptureFixture[str], tmp_path: Path
 ) -> None:
-    assert cli.main(["run", "--all"]) == 0
+    assert cli.main(["run", "--all"]) == 1  # the corpus has one designed crash
 
     out = capsys.readouterr().out
-    assert "21 documents, 0 pipeline error(s), 2 degraded" in out
-    assert out.count("type mismatch") == 3
+    assert "32 documents, 1 pipeline error(s), 3 degraded" in out
+    assert out.count("type mismatch") == 4
     assert "input truncated" in out
-    assert len(list((tmp_path / "traces").glob("*.json"))) == 21
+    assert "extraction: LLMOutputError" in out
+    assert len(list((tmp_path / "traces").glob("*.json"))) == 32
 
 
 def test_traces_list_filters_by_status(capsys: pytest.CaptureFixture[str]) -> None:
@@ -73,9 +74,10 @@ def test_traces_list_filters_by_status(capsys: pytest.CaptureFixture[str]) -> No
     assert cli.main(["traces", "list", "--status", "degraded"]) == 0
 
     out = capsys.readouterr().out
-    assert "2 of 2 trace(s)" in out
+    assert "3 of 3 trace(s)" in out
     assert "report_supplier_risk_long_15" in out
     assert "ambiguous_amendment_letter_20" in out
+    assert "contract_long_liability_29" in out
 
 
 def test_traces_list_by_document_with_limit(capsys: pytest.CaptureFixture[str]) -> None:

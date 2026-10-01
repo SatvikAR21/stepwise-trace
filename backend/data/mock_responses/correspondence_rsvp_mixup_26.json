@@ -1,0 +1,42 @@
+{
+  "_comment": "INTENDED FAILURE (propagation_error at summarization): extraction labels both dates correctly (dinner March 12, 2026; reply by February 27, 2026); the summary swaps them.",
+  "extraction": {
+    "confidence": 5,
+    "people": [
+      {"name": "Grace Liu", "role": "Events Manager, Summit Law"},
+      {"name": "Eleanor Marsh", "role": "Judge, keynote speaker"}
+    ],
+    "organizations": [
+      {"name": "Summit Law", "role": "Host"},
+      {"name": "Harbourview Hotel", "role": "Venue"}
+    ],
+    "dates": [
+      {"raw": "January 30, 2026", "iso_date": "2026-01-30", "context": "Email date"},
+      {"raw": "March 12, 2026", "iso_date": "2026-03-12", "context": "Date of the annual partner dinner"},
+      {"raw": "February 27, 2026", "iso_date": "2026-02-27", "context": "Reply deadline"}
+    ],
+    "amounts": [],
+    "key_terms": ["annual partner dinner", "pro bono work", "keynote", "dietary requirements"]
+  },
+  "classification": {
+    "confidence": 5,
+    "document_type": "correspondence",
+    "rationale": "An invitation email from a law firm's events manager to partner firms."
+  },
+  "summarization": {
+    "confidence": 5,
+    "document_type": "correspondence",
+    "headline": "Summit Law invites partner firms to its annual partner dinner on February 27, 2026 at the Harbourview Hotel.",
+    "key_points": [
+      "Keynote by Judge Eleanor Marsh.",
+      "Seating is limited."
+    ],
+    "sender": "Grace Liu, Summit Law",
+    "recipient": "Partner firms mailing list",
+    "purpose": "Invitation to the annual partner dinner",
+    "action_items": [
+      "Reply by March 12, 2026",
+      "Share any dietary requirements"
+    ]
+  }
+}

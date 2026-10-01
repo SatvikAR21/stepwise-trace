@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from enum import StrEnum
 from pathlib import Path
 
 from pydantic import BaseModel, Field
@@ -12,6 +13,17 @@ DOCUMENTS_SUBDIR = "documents"
 MANIFEST_NAME = "manifest.json"
 
 
+class CorpusSplit(StrEnum):
+    """Which set a document belongs to when the root-cause analyzer is graded.
+
+    ``practice`` documents may be looked at while the analyzer is built and tuned; ``exam``
+    documents are held out and graded once, so the score is not inflated by tuning on them.
+    """
+
+    PRACTICE = "practice"
+    EXAM = "exam"
+
+
 class ManifestEntry(BaseModel):
     """Metadata for one sample document, including the failure it is designed to trigger."""
 
@@ -19,6 +31,7 @@ class ManifestEntry(BaseModel):
     file: str
     format: DocumentFormat
     expected_type: DocumentType
+    split: CorpusSplit
     intended_failure: str | None = Field(
         default=None, description="Failure category this document is designed to trigger"
     )

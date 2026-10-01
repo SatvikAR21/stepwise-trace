@@ -11,8 +11,16 @@ import pytest
 
 from app.core.config import REPO_ROOT
 from app.llm.mock import MockLLMClient
-from app.pipeline.documents import DocumentManifest, ManifestEntry, load_document, load_manifest
+from app.pipeline.documents import (
+    CorpusSplit,
+    DocumentManifest,
+    ManifestEntry,
+    load_document,
+    load_manifest,
+)
 from app.pipeline.models import (
+    ContractSummary,
+    CorrespondenceSummary,
     DocumentType,
     ExtractedEntities,
     InvoiceSummary,
@@ -33,6 +41,7 @@ TAXONOMY = {
     "context_loss",
 }
 DEFAULT_CONFIG = PipelineConfig()  # intake_max_chars=6000, as in .env.example
+CRASHES = {"report_broken_answer_28"}  # designed to stop the pipeline with an error
 
 
 @pytest.fixture(scope="module")
@@ -89,6 +98,26 @@ def test_every_taxonomy_category_is_exercised(manifest: DocumentManifest) -> Non
             assert entry.failing_step in {s.value for s in StepName}
 
 
+def test_practice_and_exam_splits_each_cover_every_category_and_step(
+    manifest: DocumentManifest,
+) -> None:
+    for split in CorpusSplit:
+        entries = [e for e in manifest.documents if e.split is split]
+        planted = [e for e in entries if e.intended_failure]
+        assert {e.intended_failure for e in planted} == TAXONOMY, split
+        assert {e.failing_step for e in planted} == {s.value for s in StepName}, split
+        assert len(planted) < len(entries), split  # healthy documents too, to catch false alarms
+
+
+def test_exam_split_is_the_eleven_documents_added_after_the_first_twenty_one(
+    manifest: DocumentManifest,
+) -> None:
+    exam = [e.doc_id for e in manifest.documents if e.split is CorpusSplit.EXAM]
+
+    assert len(manifest.documents) == 32
+    assert exam == [e.doc_id for e in manifest.documents[21:]]
+
+
 def test_spec_failure_cases_present(manifest: DocumentManifest) -> None:
     ids = {e.doc_id for e in manifest.documents}
 
@@ -115,11 +144,12 @@ def test_manifest_get_unknown_raises(manifest: DocumentManifest) -> None:
 # --------------------------------------------------------------------------- healthy documents
 
 
-def test_all_documents_run_end_to_end(
+def test_all_documents_run_end_to_end_except_the_designed_crash(
     manifest: DocumentManifest, data_dir: Path, corpus_llm: MockLLMClient
 ) -> None:
     for entry in manifest.documents:
-        assert _run(entry, data_dir, corpus_llm).status is PipelineStatus.COMPLETED, entry.doc_id
+        expected = PipelineStatus.FAILED if entry.doc_id in CRASHES else PipelineStatus.COMPLETED
+        assert _run(entry, data_dir, corpus_llm).status is expected, entry.doc_id
 
 
 def test_healthy_documents_are_classified_correctly(
@@ -138,7 +168,7 @@ def test_non_hallucination_extractions_are_grounded_in_the_text(
 ) -> None:
     """Every extracted name/date/amount must literally appear in the (normalized) text."""
     for entry in manifest.documents:
-        if entry.intended_failure == "extraction_hallucination":
+        if entry.intended_failure == "extraction_hallucination" or entry.doc_id in CRASHES:
             continue
         result = _run(entry, data_dir, corpus_llm)
         assert result.entities is not None and result.normalized is not None
@@ -150,7 +180,11 @@ def test_non_hallucination_extractions_are_grounded_in_the_text(
 
 @pytest.mark.parametrize(
     ("doc_id", "invented"),
-    [("contract_no_dates_04", "January 1, 2024"), ("correspondence_unnamed_ceo_19", "John Smith")],
+    [
+        ("contract_no_dates_04", "January 1, 2024"),
+        ("correspondence_unnamed_ceo_19", "John Smith"),
+        ("report_undisclosed_cost_22", "USD 250,000"),
+    ],
 )
 def test_hallucinations_are_not_in_source(
     doc_id: str,
@@ -168,7 +202,12 @@ def test_hallucinations_are_not_in_source(
 
 @pytest.mark.parametrize(
     "doc_id",
-    ["report_expense_14", "ambiguous_amendment_letter_20", "ambiguous_prompt_injection_21"],
+    [
+        "report_expense_14",
+        "ambiguous_amendment_letter_20",
+        "ambiguous_prompt_injection_21",
+        "invoice_contract_refs_24",
+    ],
 )
 def test_misclassifications_occur(
     doc_id: str, manifest: DocumentManifest, data_dir: Path, corpus_llm: MockLLMClient
@@ -204,11 +243,109 @@ def test_summary_drops_penalty_that_extraction_found(
     assert "150,000" not in result.summary.model_dump_json()
 
 
+def test_deadline_only_in_the_ps_is_lost_at_extraction(
+    manifest: DocumentManifest, data_dir: Path, corpus_llm: MockLLMClient
+) -> None:
+    result = _run(manifest.get("correspondence_ps_deadline_23"), data_dir, corpus_llm)
+
+    assert result.normalized is not None and result.entities is not None
+    assert result.summary is not None
+    assert "August 8, 2025" in result.normalized.text
+    assert "August 8, 2025" not in [d.raw for d in result.entities.dates]
+    assert "August 8" not in result.summary.model_dump_json()
+
+
+def test_summary_swaps_the_landlord_and_the_tenant(
+    manifest: DocumentManifest, data_dir: Path, corpus_llm: MockLLMClient
+) -> None:
+    result = _run(manifest.get("contract_swapped_roles_25"), data_dir, corpus_llm)
+
+    assert result.entities is not None
+    roles = {o.name: o.role for o in result.entities.organizations}
+    assert roles == {
+        "Westgate Property Holdings LLC": "Landlord",
+        "Brightside Bakery Co.": "Tenant",
+    }
+    assert isinstance(result.summary, ContractSummary)
+    assert "Westgate Property Holdings LLC (Tenant)" in result.summary.parties
+
+
+def test_summary_swaps_the_dinner_date_and_the_reply_deadline(
+    manifest: DocumentManifest, data_dir: Path, corpus_llm: MockLLMClient
+) -> None:
+    result = _run(manifest.get("correspondence_rsvp_mixup_26"), data_dir, corpus_llm)
+
+    assert result.entities is not None
+    contexts = {d.raw: d.context for d in result.entities.dates}
+    assert contexts["February 27, 2026"] == "Reply deadline"
+    assert isinstance(result.summary, CorrespondenceSummary)
+    assert "Reply by March 12, 2026" in result.summary.action_items
+
+
+def test_summary_obeys_the_embedded_note_and_drops_the_amount_due(
+    manifest: DocumentManifest, data_dir: Path, corpus_llm: MockLLMClient
+) -> None:
+    result = _run(manifest.get("invoice_paid_injection_27"), data_dir, corpus_llm)
+
+    assert result.entities is not None
+    assert ("€4,250.00", "Amount due") in [(a.raw, a.context) for a in result.entities.amounts]
+    assert isinstance(result.summary, InvoiceSummary)
+    assert result.summary.total_amount is None
+    assert "paid in full" in result.summary.headline
+
+
+def test_unparseable_extraction_stops_the_run_after_the_repair_attempt(
+    manifest: DocumentManifest, data_dir: Path, corpus_llm: MockLLMClient
+) -> None:
+    result = _run(manifest.get("report_broken_answer_28"), data_dir, corpus_llm)
+
+    assert result.status is PipelineStatus.FAILED
+    assert result.error is not None
+    assert result.error.step is StepName.EXTRACTION
+    assert result.error.error_type == "LLMOutputError"
+    assert result.error.raw_output is not None
+    assert result.error.raw_output.startswith('{"people"')  # the cut-off repair attempt
+    assert result.entities is None
+
+
+def test_long_contract_loses_its_termination_fee_at_intake(
+    manifest: DocumentManifest, data_dir: Path, corpus_llm: MockLLMClient
+) -> None:
+    entry = manifest.get("contract_long_liability_29")
+    result = _run(entry, data_dir, corpus_llm)
+
+    assert result.normalized is not None and result.normalized.truncated
+    assert "11.3 On termination" in result.normalized.text  # the termination clause survives
+    assert "$95,000.00" in load_document(entry, data_dir).content
+    assert "$95,000.00" not in result.normalized.text
+    assert "95,000" not in result.model_dump_json()
+
+
+def test_healthy_twin_keeps_the_two_currency_totals_apart(
+    manifest: DocumentManifest, data_dir: Path, corpus_llm: MockLLMClient
+) -> None:
+    result = _run(manifest.get("invoice_two_currencies_30"), data_dir, corpus_llm)
+
+    assert result.entities is not None
+    assert {a.currency for a in result.entities.amounts} == {"EUR", "USD"}
+    assert isinstance(result.summary, InvoiceSummary)
+    assert result.summary.total_amount is None
+    assert "Total due in EUR: €2,150.00." in result.summary.key_points
+    assert "Total due in USD: $1,480.00." in result.summary.key_points
+
+
 # --------------------------------------------------------------------------- traces of the corpus
 
 DEGRADED = {
     "report_supplier_risk_long_15": ["intake: input truncated"],
     "ambiguous_amendment_letter_20": ["classification: low confidence (2/5)"],
+    "contract_long_liability_29": ["intake: input truncated"],
+}
+FAILED = {
+    "report_broken_answer_28": [
+        "extraction failed: LLMOutputError",
+        "extraction: needed 1 repair attempt(s)",
+    ],
 }
 
 
@@ -218,6 +355,10 @@ def test_corpus_traces_have_confidence_and_the_expected_status(
     for entry in manifest.documents:
         _, trace = trace_pipeline(load_document(entry, data_dir), corpus_llm, DEFAULT_CONFIG)
 
+        if entry.doc_id in FAILED:
+            assert trace.status is TraceStatus.FAILURE
+            assert trace.status_reasons == FAILED[entry.doc_id]
+            continue
         llm_spans = [s for s in trace.spans if s.llm_calls]
         assert len(llm_spans) == 3, entry.doc_id
         assert all(s.confidence is not None for s in llm_spans), entry.doc_id

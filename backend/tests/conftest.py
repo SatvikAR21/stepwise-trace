@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 from collections.abc import Iterator
 from pathlib import Path
 
@@ -39,6 +40,18 @@ def _isolate_env(monkeypatch: pytest.MonkeyPatch) -> Iterator[None]:
     get_settings.cache_clear()
     yield
     get_settings.cache_clear()
+
+
+@pytest.fixture(autouse=True)
+def _drop_closed_log_streams() -> Iterator[None]:
+    """``configure_logging`` (called by the CLI) attaches a handler to the current stderr, which in
+    a test is a capture buffer closed when the test ends. Remove such handlers afterwards, so a
+    warning logged by a later test does not hit a closed stream."""
+    yield
+    root = logging.getLogger()
+    for handler in root.handlers[:]:
+        if getattr(getattr(handler, "stream", None), "closed", False):
+            root.removeHandler(handler)
 
 
 @pytest.fixture

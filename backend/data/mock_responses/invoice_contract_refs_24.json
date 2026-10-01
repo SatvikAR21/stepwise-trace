@@ -1,0 +1,45 @@
+{
+  "_comment": "INTENDED FAILURE (misclassification): an invoice that quotes its master agreement's payment clauses is labelled a contract, so the summary takes the contract shape (no total, no due date).",
+  "extraction": {
+    "confidence": 5,
+    "people": [],
+    "organizations": [
+      {"name": "Northbridge Facility Services LLC", "role": "Vendor"},
+      {"name": "Calder Biotech Inc.", "role": "Client"}
+    ],
+    "dates": [
+      {"raw": "September 30, 2025", "iso_date": "2025-09-30", "context": "Invoice date"},
+      {"raw": "October 30, 2025", "iso_date": "2025-10-30", "context": "Payment due"},
+      {"raw": "January 15, 2025", "iso_date": "2025-01-15", "context": "Date of Master Services Agreement MSA-2291"}
+    ],
+    "amounts": [
+      {"raw": "$6,600.00", "value": 6600.00, "currency": "USD", "context": "Laboratory floor cleaning"},
+      {"raw": "$1,950.00", "value": 1950.00, "currency": "USD", "context": "Regulated waste removal"},
+      {"raw": "$840.00", "value": 840.00, "currency": "USD", "context": "HVAC filter replacement"},
+      {"raw": "$9,390.00", "value": 9390.00, "currency": "USD", "context": "Total due"}
+    ],
+    "key_terms": ["NB-7719", "MSA-2291", "payable within 30 days", "1.5% monthly late-payment interest"]
+  },
+  "classification": {
+    "confidence": 4,
+    "document_type": "contract",
+    "rationale": "Refers to a Master Services Agreement and cites numbered clauses on payment terms and late-payment interest between two companies."
+  },
+  "summarization": {
+    "confidence": 4,
+    "document_type": "contract",
+    "headline": "Master Services Agreement MSA-2291 between Northbridge Facility Services and Calder Biotech sets payment within 30 days and 1.5% monthly late interest.",
+    "key_points": [
+      "Agreement dated January 15, 2025.",
+      "September 2025 services total $9,390.00."
+    ],
+    "parties": ["Northbridge Facility Services LLC", "Calder Biotech Inc."],
+    "effective_date": "2025-01-15",
+    "term": null,
+    "key_obligations": [
+      "Calder Biotech pays invoices within 30 days (clause 7.2)",
+      "Late payments accrue 1.5% interest per month (clause 9.1)"
+    ],
+    "termination_terms": null
+  }
+}

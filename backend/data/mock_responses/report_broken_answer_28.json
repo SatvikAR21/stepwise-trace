@@ -1,0 +1,31 @@
+{
+  "_comment": "INTENDED FAILURE (prompt_failure at extraction): the model ignores the 'answer with ONE JSON object' instruction. Attempt 1 is chatty prose with no JSON; the repair attempt is cut off mid-object. Both are invalid, so extraction raises and the run stops. The classification and summarization answers are never used in a normal run; they exist so the run can be resumed from a later step.",
+  "extraction": [
+    "Sure! I read the survey report. It was prepared by Lucia Romero, the Customer Insights Lead at Vantage Telecom, and published on October 6, 2025. They surveyed 4,812 customers and satisfaction went up to 78%. I hope this helps!",
+    "{\"people\": [{\"name\": \"Lucia Romero\", \"role\": \"Customer Insights Lead\"}], \"organizations\": [{\"name\": \"Vantage Telecom\", \"role\": \"Organization\"}], \"dates\": [{\"raw\": \"October 6, 2025\", \"iso_date\": \"2025-10-06\", \"context\": \"Publication date\"}, {\"raw\": \"July 1, 2025\""
+  ],
+  "classification": {
+    "confidence": 5,
+    "document_type": "report",
+    "rationale": "A customer satisfaction survey report with results by channel, findings and recommendations."
+  },
+  "summarization": {
+    "confidence": 5,
+    "document_type": "report",
+    "headline": "Vantage Telecom's Q3 2025 customer satisfaction rose to 78%, but phone support remains the weakest channel.",
+    "key_points": [
+      "4,812 customers surveyed between July 1, 2025 and September 30, 2025.",
+      "Satisfaction rose from 74% to 78%."
+    ],
+    "title": "Customer Satisfaction Survey: Q3 2025 Results",
+    "key_findings": [
+      "Mobile app 83%, retail stores 79%, phone support 69% satisfied",
+      "Average phone waiting time was 11 minutes",
+      "Users of the new billing page were more satisfied"
+    ],
+    "recommendations": [
+      "Add call-back scheduling to phone support",
+      "Promote the new billing page in the mobile app"
+    ]
+  }
+}

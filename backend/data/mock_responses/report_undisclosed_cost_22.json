@@ -1,0 +1,47 @@
+{
+  "_comment": "INTENDED FAILURE (extraction_hallucination): the report says the licence cost was NOT disclosed, but extraction invents 'USD 250,000' as the pilot licence cost and the summary repeats it.",
+  "extraction": {
+    "confidence": 5,
+    "people": [
+      {"name": "Priya Natarajan", "role": "Finance Operations Analyst"}
+    ],
+    "organizations": [
+      {"name": "Harbor Logistics Ltd.", "role": "Organization running the pilot"},
+      {"name": "LedgerLoop Software", "role": "Tool vendor"}
+    ],
+    "dates": [
+      {"raw": "June 16, 2025", "iso_date": "2025-06-16", "context": "Report date"},
+      {"raw": "March 3, 2025", "iso_date": "2025-03-03", "context": "Pilot start"},
+      {"raw": "May 30, 2025", "iso_date": "2025-05-30", "context": "Pilot end"}
+    ],
+    "amounts": [
+      {"raw": "$18,400", "value": 18400, "currency": "USD", "context": "Overtime reduction for the pilot group"},
+      {"raw": "USD 250,000", "value": 250000, "currency": "USD", "context": "Pilot licence cost"}
+    ],
+    "key_terms": ["automated invoice matching", "accounts payable", "processing time", "matching errors", "handwritten delivery notes"]
+  },
+  "classification": {
+    "confidence": 5,
+    "document_type": "report",
+    "rationale": "An evaluation report with purpose, method, findings and recommendations for a software pilot."
+  },
+  "summarization": {
+    "confidence": 4,
+    "document_type": "report",
+    "headline": "The LedgerLoop invoice-matching pilot cut processing time and errors at a licence cost of USD 250,000.",
+    "key_points": [
+      "Pilot licence cost: USD 250,000.",
+      "Overtime for the pilot group fell by $18,400."
+    ],
+    "title": "Pilot Evaluation Report: Automated Invoice Matching at Harbor Logistics Ltd.",
+    "key_findings": [
+      "Processing time per invoice fell from 9 minutes to 4 minutes",
+      "Matching errors dropped from 3.1% to 1.2% of invoices",
+      "The tool struggled with handwritten delivery notes"
+    ],
+    "recommendations": [
+      "Request a written price quote from LedgerLoop before any decision",
+      "Extend the pilot to a third clerk for one more month"
+    ]
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "_comment": "HEALTHY TWIN of the report_postmortem_12 false alarm: the summary states '25%' growth, correctly computed from $2.0 million to $2.5 million. The number is not written in the document, so the summary-number clue flags it although nothing is wrong.",
+  "extraction": {
+    "confidence": 5,
+    "people": [
+      {"name": "Marcus Bell", "role": "Head of Digital"}
+    ],
+    "organizations": [
+      {"name": "Fernhill Outdoor Gear Ltd.", "role": "Reporting company"}
+    ],
+    "dates": [
+      {"raw": "January 19, 2026", "iso_date": "2026-01-19", "context": "Report date"},
+      {"raw": "May 2025", "iso_date": null, "context": "New size guide launched"}
+    ],
+    "amounts": [
+      {"raw": "$2.0 million", "value": 2000000, "currency": "USD", "context": "Online revenue 2024"},
+      {"raw": "$2.5 million", "value": 2500000, "currency": "USD", "context": "Online revenue 2025"},
+      {"raw": "$67", "value": 67, "currency": "USD", "context": "Average order value"}
+    ],
+    "key_terms": ["online revenue", "mobile orders", "returns", "size guide", "delivery complaints"]
+  },
+  "classification": {
+    "confidence": 5,
+    "document_type": "report",
+    "rationale": "An annual performance report with an overview, key findings and recommendations."
+  },
+  "summarization": {
+    "confidence": 5,
+    "document_type": "report",
+    "headline": "Fernhill Outdoor Gear's online revenue grew 25% to $2.5 million in 2025.",
+    "key_points": [
+      "Orders rose from 31,000 to 37,200.",
+      "The average order value stayed close to $67."
+    ],
+    "title": "Annual E-commerce Performance Report 2025",
+    "key_findings": [
+      "Mobile devices accounted for 61% of orders, up from 52%",
+      "Returns fell to 8% of orders after the new size guide",
+      "Delivery complaints doubled during the December peak because of carrier delays"
+    ],
+    "recommendations": [
+      "Add a second delivery carrier before the next December peak",
+      "Extend the size guide to footwear"
+    ]
+  }
+}

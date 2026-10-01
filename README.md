@@ -12,8 +12,8 @@ first step that went wrong.
 
 - Done:
   - A typed four-step pipeline (Pydantic models for every step), versioned prompts, a mock LLM
-    client plus an OpenAI-compatible client (tested with Gemini), a 21-document sample corpus with
-    8 deliberately failing cases, and a CLI.
+    client plus an OpenAI-compatible client (tested with Gemini), a 32-document sample corpus with
+    16 deliberately failing cases (split into a practice set and a held-out exam set), and a CLI.
   - Tracing: every run is recorded step by step (inputs, outputs, prompts, raw LLM answers, tokens,
     latency, the model's self-reported confidence and grounding checks) along with the settings it
     used, given a status (success / degraded / failure), saved as JSON with a SQLite index, and

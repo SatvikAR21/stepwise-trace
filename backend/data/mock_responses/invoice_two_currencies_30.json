@@ -1,0 +1,43 @@
+{
+  "_comment": "HEALTHY TWIN of invoice_multi_currency_09: amounts in EUR and USD, handled correctly. The summary keeps the two totals apart and leaves the single total_amount empty.",
+  "extraction": {
+    "confidence": 5,
+    "people": [],
+    "organizations": [
+      {"name": "Orbis Event Logistics GmbH", "role": "Vendor"},
+      {"name": "Pinecrest Software Inc.", "role": "Customer"}
+    ],
+    "dates": [
+      {"raw": "August 18, 2025", "iso_date": "2025-08-18", "context": "Invoice date"},
+      {"raw": "September 17, 2025", "iso_date": "2025-09-17", "context": "Due date"}
+    ],
+    "amounts": [
+      {"raw": "€1,600.00", "value": 1600.00, "currency": "EUR", "context": "Venue booking and staffing"},
+      {"raw": "€550.00", "value": 550.00, "currency": "EUR", "context": "Local transport for speakers"},
+      {"raw": "$1,480.00", "value": 1480.00, "currency": "USD", "context": "Live-stream production; also the total due in USD"},
+      {"raw": "€2,150.00", "value": 2150.00, "currency": "EUR", "context": "Total due in EUR"}
+    ],
+    "key_terms": ["OEL-5530", "Hamburg developer conference", "EUR and USD invoiced separately"]
+  },
+  "classification": {
+    "confidence": 5,
+    "document_type": "invoice",
+    "rationale": "Requests payment for conference services with an invoice number, line items, totals and a due date."
+  },
+  "summarization": {
+    "confidence": 5,
+    "document_type": "invoice",
+    "headline": "Orbis Event Logistics invoices Pinecrest Software €2,150.00 and $1,480.00 for conference services, due September 17, 2025.",
+    "key_points": [
+      "EUR and USD amounts are invoiced and paid separately.",
+      "Total due in EUR: €2,150.00.",
+      "Total due in USD: $1,480.00."
+    ],
+    "vendor": "Orbis Event Logistics GmbH",
+    "customer": "Pinecrest Software Inc.",
+    "invoice_number": "OEL-5530",
+    "total_amount": null,
+    "due_date": "2025-09-17",
+    "line_item_count": 3
+  }
+}
