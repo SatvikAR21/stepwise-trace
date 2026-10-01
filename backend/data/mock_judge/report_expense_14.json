@@ -1,0 +1,49 @@
+{
+  "_comment": "Scripted verdict of the pretend judge, an ideal judge that agrees with the answer key. Used by tests and the demo; it says nothing about how well a real judge performs.",
+  "judge": {
+    "steps": [
+      {
+        "step": "intake",
+        "score": 5,
+        "introduced": [],
+        "inherited": [],
+        "category": null,
+        "explanation": "The whole document was kept; only whitespace was cleaned.",
+        "evidence": []
+      },
+      {
+        "step": "extraction",
+        "score": 5,
+        "introduced": [],
+        "inherited": [],
+        "category": null,
+        "explanation": "Every extracted name, date and amount appears in the text.",
+        "evidence": []
+      },
+      {
+        "step": "classification",
+        "score": 2,
+        "introduced": [
+          "Labels an internal expense report as an invoice, although the document says it is not a payment request."
+        ],
+        "inherited": [],
+        "category": "misclassification",
+        "explanation": "Itemised amounts and a total misled the classification; the purpose is reporting.",
+        "evidence": [
+          "invoice"
+        ]
+      },
+      {
+        "step": "summarization",
+        "score": 4,
+        "introduced": [],
+        "inherited": [
+          "Uses the invoice shape because classification chose 'invoice'."
+        ],
+        "category": null,
+        "explanation": "The summary followed the wrong type faithfully.",
+        "evidence": []
+      }
+    ]
+  }
+}

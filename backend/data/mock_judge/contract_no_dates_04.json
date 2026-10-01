@@ -1,0 +1,51 @@
+{
+  "_comment": "Scripted verdict of the pretend judge, an ideal judge that agrees with the answer key. Used by tests and the demo; it says nothing about how well a real judge performs.",
+  "judge": {
+    "steps": [
+      {
+        "step": "intake",
+        "score": 5,
+        "introduced": [],
+        "inherited": [],
+        "category": null,
+        "explanation": "The whole document was kept; only whitespace was cleaned.",
+        "evidence": []
+      },
+      {
+        "step": "extraction",
+        "score": 1,
+        "introduced": [
+          "Reports an effective date 'January 1, 2024' that appears nowhere in the document."
+        ],
+        "inherited": [],
+        "category": "extraction_hallucination",
+        "explanation": "The contract contains no dates at all, yet the extraction lists an effective date.",
+        "evidence": [
+          "January 1, 2024"
+        ]
+      },
+      {
+        "step": "classification",
+        "score": 5,
+        "introduced": [],
+        "inherited": [],
+        "category": null,
+        "explanation": "'contract' matches the document's purpose.",
+        "evidence": []
+      },
+      {
+        "step": "summarization",
+        "score": 5,
+        "introduced": [],
+        "inherited": [
+          "Repeats the invented effective date January 1, 2024 from the extraction."
+        ],
+        "category": null,
+        "explanation": "The summary faithfully used the extraction, including its invented date.",
+        "evidence": [
+          "effective January 1, 2024"
+        ]
+      }
+    ]
+  }
+}

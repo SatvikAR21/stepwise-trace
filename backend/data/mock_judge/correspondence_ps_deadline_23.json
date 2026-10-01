@@ -1,0 +1,53 @@
+{
+  "_comment": "Scripted verdict of the pretend judge, an ideal judge that agrees with the answer key. Used by tests and the demo; it says nothing about how well a real judge performs.",
+  "judge": {
+    "steps": [
+      {
+        "step": "intake",
+        "score": 5,
+        "introduced": [],
+        "inherited": [],
+        "category": null,
+        "explanation": "The whole document was kept; only whitespace was cleaned.",
+        "evidence": []
+      },
+      {
+        "step": "extraction",
+        "score": 2,
+        "introduced": [
+          "Misses the deadline in the P.S.: return the signed tenancy form by August 8, 2025, or the room goes to the next student."
+        ],
+        "inherited": [],
+        "category": "context_loss",
+        "explanation": "The only real deadline in the letter is missing from the dates.",
+        "evidence": [
+          "August 8, 2025"
+        ]
+      },
+      {
+        "step": "classification",
+        "score": 5,
+        "introduced": [],
+        "inherited": [],
+        "category": null,
+        "explanation": "'correspondence' matches the document's purpose.",
+        "evidence": []
+      },
+      {
+        "step": "summarization",
+        "score": 2,
+        "introduced": [
+          "Leaves out the August 8, 2025 deadline, although it is in the text."
+        ],
+        "inherited": [
+          "The extraction did not list the deadline."
+        ],
+        "category": "context_loss",
+        "explanation": "The summary had the full text but kept no deadline in its action items.",
+        "evidence": [
+          "August 8, 2025"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "_comment": "Scripted verdict of the pretend judge, an ideal judge that agrees with the answer key. Used by tests and the demo; it says nothing about how well a real judge performs.",
+  "judge": {
+    "steps": [
+      {
+        "step": "intake",
+        "score": 1,
+        "introduced": [
+          "Cut the report at 6,000 characters, dropping Section 3 with the Salmonella finding and the recommendation to suspend Halvorsen Grain Cooperative."
+        ],
+        "inherited": [],
+        "category": "context_loss",
+        "explanation": "The most important finding sat after the length limit and never reached the AI steps.",
+        "evidence": [
+          "Salmonella"
+        ]
+      },
+      {
+        "step": "extraction",
+        "score": 5,
+        "introduced": [],
+        "inherited": [],
+        "category": null,
+        "explanation": "Every extracted name, date and amount appears in the text.",
+        "evidence": []
+      },
+      {
+        "step": "classification",
+        "score": 5,
+        "introduced": [],
+        "inherited": [],
+        "category": null,
+        "explanation": "'report' matches the document's purpose.",
+        "evidence": []
+      },
+      {
+        "step": "summarization",
+        "score": 4,
+        "introduced": [],
+        "inherited": [
+          "Calls the supplier base healthy because the critical finding never reached it."
+        ],
+        "category": null,
+        "explanation": "The summary is faithful to the truncated text it received.",
+        "evidence": []
+      }
+    ]
+  }
+}

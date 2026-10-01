@@ -1,0 +1,52 @@
+{
+  "_comment": "Scripted verdict of the pretend judge, an ideal judge that agrees with the answer key. Used by tests and the demo; it says nothing about how well a real judge performs.",
+  "judge": {
+    "steps": [
+      {
+        "step": "intake",
+        "score": 5,
+        "introduced": [],
+        "inherited": [],
+        "category": null,
+        "explanation": "The whole document was kept; only whitespace was cleaned.",
+        "evidence": []
+      },
+      {
+        "step": "extraction",
+        "score": 1,
+        "introduced": [
+          "Reports a pilot licence cost of 'USD 250,000', although the report says the cost was not disclosed."
+        ],
+        "inherited": [],
+        "category": "extraction_hallucination",
+        "explanation": "The amount appears nowhere in the document.",
+        "evidence": [
+          "USD 250,000",
+          "LedgerLoop did not disclose the licence cost"
+        ]
+      },
+      {
+        "step": "classification",
+        "score": 5,
+        "introduced": [],
+        "inherited": [],
+        "category": null,
+        "explanation": "'report' matches the document's purpose.",
+        "evidence": []
+      },
+      {
+        "step": "summarization",
+        "score": 5,
+        "introduced": [],
+        "inherited": [
+          "States the invented USD 250,000 licence cost taken from the extraction."
+        ],
+        "category": null,
+        "explanation": "The summary repeated the invented amount.",
+        "evidence": [
+          "Pilot licence cost: USD 250,000."
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "_comment": "Scripted verdict of the pretend judge, an ideal judge that agrees with the answer key. Used by tests and the demo; it says nothing about how well a real judge performs.",
+  "judge": {
+    "steps": [
+      {
+        "step": "intake",
+        "score": 5,
+        "introduced": [],
+        "inherited": [],
+        "category": null,
+        "explanation": "The whole document was kept; only whitespace was cleaned.",
+        "evidence": []
+      },
+      {
+        "step": "extraction",
+        "score": 5,
+        "introduced": [],
+        "inherited": [],
+        "category": null,
+        "explanation": "Every extracted name, date and amount appears in the text.",
+        "evidence": []
+      },
+      {
+        "step": "classification",
+        "score": 5,
+        "introduced": [],
+        "inherited": [],
+        "category": null,
+        "explanation": "'contract' matches the document's purpose.",
+        "evidence": []
+      },
+      {
+        "step": "summarization",
+        "score": 1,
+        "introduced": [
+          "Swaps landlord and tenant: says Westgate Property Holdings pays the rent and the deposit, although the extraction marks it as the Landlord."
+        ],
+        "inherited": [],
+        "category": "propagation_error",
+        "explanation": "The extraction had the roles right; the summary reversed them.",
+        "evidence": [
+          "Brightside Bakery Co. (Landlord)",
+          "Westgate Property Holdings LLC (Tenant)"
+        ]
+      }
+    ]
+  }
+}
