@@ -7,6 +7,7 @@ It never sees the steps' self-reported confidence, so its verdict is independent
 
 from __future__ import annotations
 
+import hashlib
 import json
 from dataclasses import dataclass
 from typing import Any
@@ -117,19 +118,40 @@ def build_case_file(trace: Trace) -> str:
     return "\n".join(parts)
 
 
-def judge_trace(
-    trace: Trace, llm: LLMClient, *, temperature: float = 0.0, max_repair_attempts: int = 1
-) -> JudgeResult:
-    """Grade every step of ``trace`` in one LLM call (plus repair attempts if the answer is bad).
-
-    Raises ``JudgeFailedError`` if the provider fails or the last answer is still unusable.
-    """
+def judge_messages(trace: Trace) -> list[ChatMessage]:
+    """The exact first request the judge receives for ``trace``."""
     config = trace.config or PipelineConfig()
-    messages = TRACE_JUDGE_PROMPT.render(
+    return TRACE_JUDGE_PROMPT.render(
         max_chars=str(config.intake_max_chars),
         categories=render_categories(),
         case_file=build_case_file(trace),
     )
+
+
+def request_fingerprint(messages: list[ChatMessage], model: str) -> str:
+    """A hash of a request and the model it goes to: equal hashes mean an identical question."""
+    payload = json.dumps(
+        {"model": model, "messages": [m.model_dump(mode="json") for m in messages]},
+        ensure_ascii=False,
+        sort_keys=True,
+    )
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
+def judge_trace(
+    trace: Trace,
+    llm: LLMClient,
+    *,
+    messages: list[ChatMessage] | None = None,
+    temperature: float = 0.0,
+    max_repair_attempts: int = 1,
+) -> JudgeResult:
+    """Grade every step of ``trace`` in one LLM call (plus repair attempts if the answer is bad).
+
+    ``messages`` defaults to ``judge_messages(trace)``. Raises ``JudgeFailedError`` if the
+    provider fails or the last answer is still unusable.
+    """
+    messages = messages or judge_messages(trace)
     expected = steps_that_ran(trace)
     calls: list[LLMCallRecord] = []
     attempt = 1
