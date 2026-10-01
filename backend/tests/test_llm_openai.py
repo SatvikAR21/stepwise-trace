@@ -120,6 +120,7 @@ def test_http_errors_become_provider_errors(status: int, error_name: str) -> Non
 
     assert info.value.status_code == status
     assert info.value.retry_after_s is None
+    assert info.value.quota_exhausted is False
 
 
 @pytest.mark.parametrize(
@@ -143,3 +144,33 @@ def test_rate_limit_error_carries_the_requested_delay(
 
     assert info.value.status_code == 429
     assert info.value.retry_after_s == expected
+
+
+@pytest.mark.parametrize(
+    ("status", "message", "exhausted"),
+    [
+        (
+            429,
+            "Quota exceeded for metric: generate_content_free_tier_requests, limit: 20 "
+            '[{"quotaId": "GenerateRequestsPerDayPerProjectPerModel-FreeTier"}]',
+            True,
+        ),
+        (429, "Rate limit reached on requests per day (RPD): Limit 1000, Used 1000", True),
+        (
+            429,
+            'Quota exceeded [{"quotaId": "GenerateRequestsPerMinutePerProjectPerModel-FreeTier"}]'
+            " Please retry in 20.5s.",
+            False,
+        ),
+        (500, "internal error while counting requests per day", False),
+    ],
+)
+def test_errors_say_whether_a_daily_quota_is_used_up(
+    status: int, message: str, exhausted: bool
+) -> None:
+    client = _client(lambda _: httpx2.Response(status, json={"error": {"message": message}}))
+
+    with pytest.raises(LLMProviderError) as info:
+        client.complete(_request())
+
+    assert info.value.quota_exhausted is exhausted

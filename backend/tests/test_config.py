@@ -28,6 +28,33 @@ def test_defaults_are_safe_and_free() -> None:
     assert settings.llm_provider is LLMProvider.MOCK
     assert settings.llm_api_key is None
     assert settings.log_format is LogFormat.CONSOLE
+    assert settings.judge_provider is LLMProvider.MOCK
+    assert settings.judge_max_retries == 0  # no hidden retries against a free quota
+    assert settings.judge_max_rpm == 4  # below the Gemini free tier's 5 per minute
+    assert settings.judge_drop_score == 2
+
+
+def test_judge_key_and_url_fall_back_to_the_llm_ones() -> None:
+    settings = _settings(llm_api_key="llm-key", llm_base_url="https://llm.example.test/v1")
+
+    assert settings.require_judge_api_key() == "llm-key"
+    assert settings.judge_endpoint == "https://llm.example.test/v1"
+
+    own = _settings(
+        llm_api_key="llm-key", judge_api_key="judge-key", judge_base_url="https://j.example.test"
+    )
+    assert own.require_judge_api_key() == "judge-key"
+    assert own.judge_endpoint == "https://j.example.test"
+
+
+def test_require_judge_api_key_raises_when_no_key_at_all() -> None:
+    with pytest.raises(RuntimeError, match="JUDGE_API_KEY or LLM_API_KEY is required"):
+        _settings().require_judge_api_key()
+
+
+def test_judge_drop_score_is_bounded() -> None:
+    with pytest.raises(ValidationError):
+        _settings(judge_drop_score=5)
 
 
 def test_reads_from_environment(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -75,10 +102,12 @@ def test_invalid_provider_rejected() -> None:
 
 
 def test_blank_optional_strings_become_none() -> None:
-    settings = _settings(llm_api_key="  ", llm_base_url="")
+    settings = _settings(llm_api_key="  ", llm_base_url="", judge_api_key=" ", judge_base_url="")
 
     assert settings.llm_api_key is None
     assert settings.llm_base_url is None
+    assert settings.judge_api_key is None
+    assert settings.judge_base_url is None
 
 
 def test_relative_paths_resolve_against_repo_root() -> None:

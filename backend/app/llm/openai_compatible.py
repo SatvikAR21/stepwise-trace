@@ -21,6 +21,10 @@ from app.llm.base import (
 
 # Gemini puts the wait in the error text ("Please retry in 20.5s", "retryDelay": "20s").
 _RETRY_IN_TEXT_RE = re.compile(r'(?:retry in |"retryDelay":\s*")(\d+(?:\.\d+)?)\s*s', re.I)
+# A daily quota, as opposed to a per-minute one: Gemini names it in the quota id
+# ("GenerateRequestsPerDayPerProjectPerModel-FreeTier"), others write "requests per day".
+_DAILY_QUOTA_RE = re.compile(r"per\s*day", re.I)
+TOO_MANY_REQUESTS = 429
 
 
 def _retry_after_seconds(exc: openai.APIStatusError) -> float | None:
@@ -92,6 +96,8 @@ class OpenAICompatibleClient(LLMClient):
                 f"{type(exc).__name__}: {exc}",
                 status_code=exc.status_code,
                 retry_after_s=_retry_after_seconds(exc),
+                quota_exhausted=exc.status_code == TOO_MANY_REQUESTS
+                and _DAILY_QUOTA_RE.search(str(exc)) is not None,
             ) from exc
         except openai.OpenAIError as exc:
             raise LLMProviderError(f"{type(exc).__name__}: {exc}") from exc

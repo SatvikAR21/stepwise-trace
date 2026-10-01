@@ -69,14 +69,22 @@ class LLMProviderError(LLMError):
 
     ``status_code`` is the HTTP status when there was one (429 = too many requests), and
     ``retry_after_s`` is how long the provider asked us to wait, when it said so.
+    ``quota_exhausted`` is True when the provider says a daily quota is used up: retrying within
+    minutes cannot succeed and would only send more requests.
     """
 
     def __init__(
-        self, message: str, *, status_code: int | None = None, retry_after_s: float | None = None
+        self,
+        message: str,
+        *,
+        status_code: int | None = None,
+        retry_after_s: float | None = None,
+        quota_exhausted: bool = False,
     ) -> None:
         super().__init__(message)
         self.status_code = status_code
         self.retry_after_s = retry_after_s
+        self.quota_exhausted = quota_exhausted
 
 
 class LLMOutputError(LLMError):

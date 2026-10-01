@@ -23,7 +23,8 @@ class ThrottledLLMClient(LLMClient):
     1. At most ``max_rpm`` calls start in any 60-second window; an extra call waits for a free slot.
     2. If the provider still answers "too many requests" (HTTP 429), wait the delay it asked for
        (or one pacing interval), capped at 60 s, and try again, at most ``max_rate_limit_retries``
-       times.
+       times. A 429 that says a daily quota is used up is raised at once: waiting a minute cannot
+       help, and every retry would be one more request.
 
     One instance can be shared between threads: callers take turns reserving a slot, while the
     calls themselves still run in parallel. Time spent waiting (for a slot, for another caller's
@@ -64,6 +65,9 @@ class ThrottledLLMClient(LLMClient):
             try:
                 response = self._inner.complete(request)
             except LLMProviderError as exc:
+                if exc.quota_exhausted:
+                    logger.warning("llm_daily_quota_exhausted")
+                    raise
                 if exc.status_code != TOO_MANY_REQUESTS or retries >= self._max_rate_limit_retries:
                     raise
                 retries += 1

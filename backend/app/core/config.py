@@ -61,6 +61,23 @@ class Settings(BaseSettings):
     llm_max_repair_attempts: int = Field(default=1, ge=0, le=3)
     llm_max_rpm: int = Field(default=0, ge=0, description="Requests per minute; 0 = no limit")
 
+    # The root-cause judge. Key and base URL fall back to the LLM_* ones when empty.
+    judge_provider: LLMProvider = LLMProvider.MOCK
+    judge_model: str = "gemini-3.5-flash"
+    judge_api_key: SecretStr | None = None
+    judge_base_url: str | None = None
+    judge_temperature: float = Field(default=0.0, ge=0.0, le=2.0)
+    judge_max_retries: int = Field(
+        default=0, ge=0, description="SDK retries; each one is another request against a quota"
+    )
+    judge_max_repair_attempts: int = Field(default=1, ge=0, le=3)
+    judge_max_rpm: int = Field(
+        default=4, ge=0, description="Requests per minute for a real judge; 0 = no limit"
+    )
+    judge_drop_score: int = Field(
+        default=2, ge=1, le=4, description="A step judged at this score or lower dropped quality"
+    )
+
     intake_max_chars: int = Field(default=6000, gt=0)
 
     data_dir: Path = Path("backend/data")
@@ -75,7 +92,9 @@ class Settings(BaseSettings):
             raise ValueError(f"invalid log level: {value!r}")
         return level
 
-    @field_validator("llm_api_key", "llm_base_url", mode="before")
+    @field_validator(
+        "llm_api_key", "llm_base_url", "judge_api_key", "judge_base_url", mode="before"
+    )
     @classmethod
     def _empty_to_none(cls, value: object) -> object:
         return None if isinstance(value, str) and not value.strip() else value
@@ -90,6 +109,20 @@ class Settings(BaseSettings):
         if self.llm_api_key is None:
             raise RuntimeError("LLM_API_KEY is required when LLM_PROVIDER is not 'mock'")
         return self.llm_api_key.get_secret_value()
+
+    def require_judge_api_key(self) -> str:
+        """Return the judge's API key (``JUDGE_API_KEY``, else ``LLM_API_KEY``), or raise."""
+        key = self.judge_api_key or self.llm_api_key
+        if key is None:
+            raise RuntimeError(
+                "JUDGE_API_KEY or LLM_API_KEY is required when JUDGE_PROVIDER is not 'mock'"
+            )
+        return key.get_secret_value()
+
+    @property
+    def judge_endpoint(self) -> str | None:
+        """The judge's base URL: ``JUDGE_BASE_URL``, else ``LLM_BASE_URL``."""
+        return self.judge_base_url or self.llm_base_url
 
 
 @lru_cache

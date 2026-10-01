@@ -198,6 +198,21 @@ def test_other_provider_errors_are_not_retried() -> None:
     assert inner.calls == 1
 
 
+def test_a_used_up_daily_quota_is_raised_at_once_without_retrying() -> None:
+    clock = FakeClock()
+    daily = LLMProviderError(
+        "RateLimitError: per day", status_code=429, retry_after_s=20.0, quota_exhausted=True
+    )
+    inner = ScriptedClient(daily, OK)
+
+    with pytest.raises(LLMProviderError) as info:
+        _throttled(inner, clock).complete(REQUEST)
+
+    assert info.value.quota_exhausted
+    assert inner.calls == 1
+    assert clock.sleeps == []
+
+
 def test_limit_must_be_positive() -> None:
     with pytest.raises(ValueError, match="at least 1"):
         ThrottledLLMClient(ScriptedClient(OK), max_rpm=0)
