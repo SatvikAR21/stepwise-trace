@@ -24,6 +24,9 @@ from app.pipeline.steps import run_classification, run_extraction, run_intake, r
 logger = get_logger(__name__)
 
 
+_ORDER = list(StepName)
+
+
 def run_pipeline(
     document: RawDocument, llm: LLMClient, config: PipelineConfig | None = None
 ) -> PipelineResult:
@@ -33,40 +36,64 @@ def run_pipeline(
     returning the outputs produced so far plus a ``StepError``. Unexpected exceptions are bugs and
     propagate unchanged.
     """
-    cfg = config or PipelineConfig()
+    return run_from(document, llm, config or PipelineConfig(), start=StepName.INTAKE)
+
+
+def run_from(
+    document: RawDocument,
+    llm: LLMClient,
+    cfg: PipelineConfig,
+    *,
+    start: StepName,
+    normalized: NormalizedDocument | None = None,
+    entities: ExtractedEntities | None = None,
+    classification: ClassificationResult | None = None,
+) -> PipelineResult:
+    """Run ``start`` and every later step, given the outputs of the steps before ``start``.
+
+    ``run_pipeline`` starts at intake; ``resume_pipeline`` (``app.pipeline.resume``) starts later
+    with outputs rebuilt from a trace. Raises ``ValueError`` if an earlier output is missing.
+    """
     log = logger.bind(doc_id=document.doc_id)
-    normalized: NormalizedDocument | None = None
-    entities: ExtractedEntities | None = None
-    classification: ClassificationResult | None = None
+    first = _ORDER.index(start)
     summary: AnySummary | None = None
-    step = StepName.INTAKE
+    step = start
 
     try:
-        normalized = run_intake(document, max_chars=cfg.intake_max_chars)
-        log.info("step_completed", step=step.value, truncated=normalized.truncated)
+        if first <= _ORDER.index(StepName.INTAKE):
+            step = StepName.INTAKE
+            normalized = run_intake(document, max_chars=cfg.intake_max_chars)
+            log.info("step_completed", step=step.value, truncated=normalized.truncated)
 
-        step = StepName.EXTRACTION
-        entities = run_extraction(
-            normalized,
-            llm,
-            temperature=cfg.temperature,
-            max_repair_attempts=cfg.max_repair_attempts,
-        )
-        log.info("step_completed", step=step.value)
+        if first <= _ORDER.index(StepName.EXTRACTION):
+            step = StepName.EXTRACTION
+            entities = run_extraction(
+                _given(normalized, StepName.INTAKE),
+                llm,
+                temperature=cfg.temperature,
+                max_repair_attempts=cfg.max_repair_attempts,
+            )
+            log.info("step_completed", step=step.value)
 
-        step = StepName.CLASSIFICATION
-        classification = run_classification(
-            ClassificationInput(document=normalized, entities=entities),
-            llm,
-            temperature=cfg.temperature,
-            max_repair_attempts=cfg.max_repair_attempts,
-        )
-        log.info("step_completed", step=step.value, document_type=classification.document_type)
+        if first <= _ORDER.index(StepName.CLASSIFICATION):
+            step = StepName.CLASSIFICATION
+            classification = run_classification(
+                ClassificationInput(
+                    document=_given(normalized, StepName.INTAKE),
+                    entities=_given(entities, StepName.EXTRACTION),
+                ),
+                llm,
+                temperature=cfg.temperature,
+                max_repair_attempts=cfg.max_repair_attempts,
+            )
+            log.info("step_completed", step=step.value, document_type=classification.document_type)
 
         step = StepName.SUMMARIZATION
         summary = run_summarization(
             SummarizationInput(
-                document=normalized, entities=entities, classification=classification
+                document=_given(normalized, StepName.INTAKE),
+                entities=_given(entities, StepName.EXTRACTION),
+                classification=_given(classification, StepName.CLASSIFICATION),
             ),
             llm,
             temperature=cfg.temperature,
@@ -100,3 +127,9 @@ def run_pipeline(
         classification=classification,
         summary=summary,
     )
+
+
+def _given[OutputT](output: OutputT | None, step: StepName) -> OutputT:
+    if output is None:
+        raise ValueError(f"the output of {step.value} is needed to run the later steps")
+    return output
