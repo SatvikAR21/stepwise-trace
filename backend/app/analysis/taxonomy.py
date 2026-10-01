@@ -64,9 +64,9 @@ TAXONOMY: tuple[CategoryDefinition, ...] = (
         category=FailureCategory.PROMPT_FAILURE,
         label="Prompt Failure",
         definition=(
-            "The step ignored an explicit instruction it was given: it obeyed instructions "
-            "written inside the document, did not answer in the required JSON shape, or broke "
-            "one of its stated rules."
+            "The step obeyed instructions written inside the document, or did not answer in "
+            "the required JSON shape. Use it only for these two cases: an invented, wrong or "
+            "dropped value belongs to one of the other categories."
         ),
         steps=frozenset({StepName.EXTRACTION, StepName.CLASSIFICATION, StepName.SUMMARIZATION}),
     ),

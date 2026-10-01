@@ -211,7 +211,7 @@ def test_analysis_records_the_judge_and_its_calls(
     analysis = analyze_trace(_trace(NO_DATES, data_dir, corpus_llm), judge)
 
     assert analysis.judge_model == "mock-llm"
-    assert analysis.judge_prompt_version == "1.0.0"
+    assert analysis.judge_prompt_version == "1.1.0"
     assert len(analysis.judge_calls) == 1 and not analysis.reused_verdict
     assert analysis.duration_ms >= 0
     assert len(analysis.analysis_id) == 32

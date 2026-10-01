@@ -49,6 +49,14 @@ def test_every_step_can_be_blamed_for_something() -> None:
         assert categories_for(step), step
 
 
+def test_prompt_failure_is_kept_narrow_so_categories_do_not_overlap() -> None:
+    text = definition_of(FailureCategory.PROMPT_FAILURE).definition
+
+    assert "instructions written inside the document" in text
+    assert "required JSON shape" in text
+    assert "belongs to one of the other categories" in text
+
+
 def test_definitions_are_readable() -> None:
     for definition in TAXONOMY:
         assert definition.label and definition.definition.endswith(".")
