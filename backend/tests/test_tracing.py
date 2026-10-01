@@ -104,7 +104,7 @@ def test_spans_capture_inputs_outputs_prompts_and_llm_calls() -> None:
 
     assert extraction.input == intake.output
     assert extraction.output["organizations"] == [{"name": "Acme", "role": None}]
-    assert (extraction.prompt_name, extraction.prompt_version) == ("extraction", "1.1.0")
+    assert (extraction.prompt_name, extraction.prompt_version) == ("extraction", "1.2.0")
     call = extraction.llm_calls[0]
     assert call.attempt == 1
     assert [m.role.value for m in call.messages] == ["system", "user"]
@@ -127,7 +127,7 @@ def test_common_features_are_logged_for_every_span() -> None:
     assert extraction.features["llm_attempts"] == 1
     assert extraction.features["repair_attempts"] == 0
     assert extraction.features["model"] == "mock-llm"
-    assert extraction.features["prompt_version"] == "1.1.0"
+    assert extraction.features["prompt_version"] == "1.2.0"
     assert extraction.features["prompt_tokens"] == extraction.llm_calls[0].prompt_tokens
 
 
