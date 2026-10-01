@@ -11,6 +11,7 @@ import pytest
 from app.analysis.evaluation import (
     EvaluationReport,
     Outcome,
+    StopReason,
     evaluate_corpus,
     save_report,
     wilson_interval,
@@ -149,10 +150,30 @@ def test_a_used_up_daily_quota_stops_the_run_at_once(
         PRACTICE, judge, stores, max_calls=20, on_result=lambda r: seen.append(r.doc_id)
     )
 
-    assert report.stopped is not None and report.stop_detail == "daily quota used up"
+    assert report.stopped is StopReason.QUOTA_EXHAUSTED
+    assert report.stop_detail == "daily quota used up"
     assert report.totals.judge_calls == 3  # two answers and the refused third request
     assert len(seen) == 21  # every row is reported, including the refused and unreached ones
     assert [r.note for r in report.rows[3:]] == ["not reached (run stopped)"] * 18
+
+
+class Overloaded(LLMClient):
+    @property
+    def model_name(self) -> str:
+        return "fake-real-model"
+
+    def complete(self, request: LLMRequest) -> LLMResponse:
+        raise LLMProviderError("InternalServerError: 503 high demand", status_code=503)
+
+
+def test_an_overloaded_model_stops_the_run_as_a_provider_error(
+    stores: tuple[TraceStore, AnalysisStore],
+) -> None:
+    report = _evaluate(PRACTICE[:2], Overloaded(), stores, max_calls=5)
+
+    assert report.stopped is StopReason.PROVIDER_ERROR
+    assert report.stop_detail is not None and "503 high demand" in report.stop_detail
+    assert report.totals.judge_calls == 1
 
 
 def test_a_quota_used_up_from_the_start_judges_nothing(

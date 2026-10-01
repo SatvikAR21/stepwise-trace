@@ -345,4 +345,26 @@ def test_evaluate_stops_early_when_the_daily_quota_is_used_up(
 
     out = capsys.readouterr().out
     assert "STOPPED EARLY: daily quota used up." in out
+    assert "again after the provider's daily reset" in out
     assert out.count("(not reached (run stopped)") == 20
+
+
+class _Overloaded(_QuotaUsedUp):
+    def complete(self, request: LLMRequest) -> LLMResponse:
+        raise LLMProviderError("InternalServerError: 503 high demand", status_code=503)
+
+
+def test_evaluate_after_an_overloaded_model_suggests_trying_again_later(
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
+    _mock_settings: Settings,
+    data_dir: Path,
+) -> None:
+    _use_real_judge(monkeypatch, _mock_settings, data_dir)
+    monkeypatch.setattr(cli, "build_judge_client", lambda s: _Overloaded())
+
+    assert cli.main(["evaluate", "--max-calls", "5"]) == 2
+
+    out = capsys.readouterr().out
+    assert "STOPPED EARLY: InternalServerError: 503 high demand." in out
+    assert "again later (an overloaded model usually recovers within minutes)" in out

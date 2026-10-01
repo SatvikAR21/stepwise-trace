@@ -10,6 +10,7 @@ from app.analysis.analyzer import analyze_trace
 from app.analysis.evaluation import (
     DocResult,
     EvaluationReport,
+    StopReason,
     evaluate_corpus,
     save_report,
     wilson_interval,
@@ -402,9 +403,14 @@ def _print_report_card(report: EvaluationReport) -> None:
         f"judge time {t.judge_latency_ms / 1000:.1f} s"
     )
     if report.stopped:
+        when = (
+            "after the provider's daily reset"
+            if report.stopped is StopReason.QUOTA_EXHAUSTED
+            else "later (an overloaded model usually recovers within minutes)"
+        )
         print(
             f"\nSTOPPED EARLY: {report.stop_detail}. Finished documents are saved; run the same "
-            "command again after the provider's limit resets and they will be reused, not re-asked."
+            f"command again {when} and they will be reused, not re-asked."
         )
     elif t.not_judged:
         print(

@@ -49,7 +49,8 @@ class Outcome(StrEnum):
 class StopReason(StrEnum):
     """Why an evaluation ended before judging every document."""
 
-    PROVIDER_ERROR = "provider-error"
+    QUOTA_EXHAUSTED = "quota-exhausted"  # a daily quota is used up: try again after its reset
+    PROVIDER_ERROR = "provider-error"  # any other provider failure, e.g. an overloaded model
 
 
 class DocResult(BaseModel):
@@ -156,8 +157,8 @@ def evaluate_corpus(
             except JudgeFailedError as exc:
                 calls.extend(exc.calls)
                 if exc.provider_error is not None:
-                    stopped = StopReason.PROVIDER_ERROR
                     quota = exc.provider_error.quota_exhausted
+                    stopped = StopReason.QUOTA_EXHAUSTED if quota else StopReason.PROVIDER_ERROR
                     stop_detail = "daily quota used up" if quota else str(exc)
                     note = stop_detail
                 else:
