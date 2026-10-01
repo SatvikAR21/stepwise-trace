@@ -215,6 +215,12 @@ def test_analysis_records_the_judge_and_its_calls(
     assert len(analysis.judge_calls) == 1 and not analysis.reused_verdict
     assert analysis.duration_ms >= 0
     assert len(analysis.analysis_id) == 32
+    # the automatic checks ride along as a second opinion; the judge said "healthy" and wins
+    assert {c.name for c in analysis.checks if c.flagged} == {
+        "ungrounded_entities",
+        "summary_numbers_not_in_document",
+    }
+    assert analysis.root_cause_step is None
 
 
 def test_step_labels() -> None:

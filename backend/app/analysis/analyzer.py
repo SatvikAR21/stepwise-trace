@@ -17,6 +17,7 @@ from collections.abc import Callable
 from datetime import UTC, datetime
 from typing import Any
 
+from app.analysis.checks import run_checks
 from app.analysis.judge import judge_messages, judge_trace, request_fingerprint
 from app.analysis.models import Analysis, JudgeAnswer, StepFinding, StepGrade, StepRole
 from app.analysis.taxonomy import definition_of
@@ -73,6 +74,7 @@ def analyze_trace(
         category=root.category if root else None,
         summary=summarize(root, findings, drop_score),
         steps=findings,
+        checks=run_checks(trace),
         verdict=verdict,
         judge_calls=calls,
     )

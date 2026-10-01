@@ -79,7 +79,7 @@ def summarization_features(
 ) -> dict[str, FeatureValue]:
     """How many distinct numbers the summary states, and how many appear nowhere in the document."""
     in_document = numbers_in(step_input.document.text)
-    in_summary = _summary_numbers(summary.model_dump(mode="json"))
+    in_summary = summary_numbers(summary.model_dump(mode="json"))
     return {
         "key_points": len(summary.key_points),
         "summary_numbers": len(in_summary),
@@ -97,13 +97,13 @@ def numbers_in(text: str) -> set[Decimal]:
     return {Decimal(token.replace(",", "")) for token in _NUMBER_RE.findall(text)}
 
 
-def _summary_numbers(value: Any) -> set[Decimal]:
-    """Numbers inside the summary's text fields. ISO dates and counts are skipped: they are
-    reformatted or computed by the model, so they are not expected to appear verbatim."""
+def summary_numbers(value: Any) -> set[Decimal]:
+    """Numbers inside a (JSON-dumped) summary's text fields. ISO dates and counts are skipped: they
+    are reformatted or computed by the model, so they are not expected to appear verbatim."""
     if isinstance(value, dict):
-        return set().union(*(_summary_numbers(v) for v in value.values()))
+        return set().union(*(summary_numbers(v) for v in value.values()))
     if isinstance(value, list):
-        return set().union(*(_summary_numbers(v) for v in value))
+        return set().union(*(summary_numbers(v) for v in value))
     if isinstance(value, str) and not _ISO_DATE_RE.match(value):
         return numbers_in(value)
     return set()

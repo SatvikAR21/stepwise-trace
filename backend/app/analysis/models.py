@@ -8,6 +8,7 @@ from typing import Self
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
+from app.analysis.checks import CheckResult
 from app.analysis.taxonomy import FailureCategory, categories_for, is_allowed
 from app.pipeline.models import StepName
 from app.tracing.models import TRACE_ID_PATTERN, LLMCallRecord
@@ -109,5 +110,9 @@ class Analysis(BaseModel):
     category: FailureCategory | None
     summary: str
     steps: list[StepFinding]
+    checks: list[CheckResult] = Field(
+        default_factory=list,
+        description="Automatic checks: a second opinion, not part of the verdict",
+    )
     verdict: JudgeAnswer
     judge_calls: list[LLMCallRecord] = Field(default_factory=list)
