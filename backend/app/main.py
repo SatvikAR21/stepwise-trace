@@ -8,10 +8,13 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from app import __version__
+from app.analysis.store import AnalysisStore, analyses_dir
+from app.api.analysis import router as analysis_router
 from app.api.health import router as health_router
 from app.api.traces import router as traces_router
 from app.core.config import Settings, get_settings
 from app.core.logging import configure_logging, get_logger
+from app.llm.factory import build_judge_client
 from app.tracing.store import TraceStore
 
 
@@ -20,11 +23,13 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     resolved = settings or get_settings()
     configure_logging(resolved.log_level, resolved.log_format)
     store = TraceStore(resolved.traces_dir, resolved.database_path)
+    analysis_store = AnalysisStore(analyses_dir(resolved.traces_dir), resolved.database_path)
 
     @asynccontextmanager
     async def lifespan(_: FastAPI) -> AsyncIterator[None]:
         yield
         store.close()
+        analysis_store.close()
 
     app = FastAPI(
         title="StepWise",
@@ -33,12 +38,18 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         lifespan=lifespan,
     )
     app.state.trace_store = store
+    app.state.analysis_store = analysis_store
+    app.state.judge_llm = build_judge_client(resolved)
     app.dependency_overrides[get_settings] = lambda: resolved
     app.include_router(health_router)
     app.include_router(traces_router)
+    app.include_router(analysis_router)
 
     get_logger(__name__).info(
-        "app_created", env=resolved.app_env.value, llm_provider=resolved.llm_provider.value
+        "app_created",
+        env=resolved.app_env.value,
+        llm_provider=resolved.llm_provider.value,
+        judge_provider=resolved.judge_provider.value,
     )
     return app
 

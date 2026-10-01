@@ -18,6 +18,12 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column
 from app.analysis.models import ANALYSIS_ID_PATTERN, Analysis, JudgeAnswer
 
 _ANALYSIS_ID_RE = re.compile(ANALYSIS_ID_PATTERN)
+ANALYSES_SUBDIR = "analyses"  # inside the traces directory
+
+
+def analyses_dir(traces_dir: Path) -> Path:
+    """Where analysis files are kept: next to the traces they diagnose."""
+    return traces_dir / ANALYSES_SUBDIR
 
 
 class _Base(DeclarativeBase):
