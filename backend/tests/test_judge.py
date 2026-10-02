@@ -100,6 +100,15 @@ def test_judge_prompt_renders_every_placeholder() -> None:
     assert messages[1].content == "CASE"
 
 
+def test_judge_prompt_counts_material_text_cut_off_at_intake_as_significant() -> None:
+    rendered = TRACE_JUDGE_PROMPT.render(max_chars="6000", categories="C", case_file="X")
+    system = " ".join(rendered[0].content.split())  # the prompt wraps its lines
+
+    assert "a dropped deadline, penalty, total or key finding" in system
+    assert "if intake cut off material content" in system
+    assert "score intake 2 or lower, because no later step can recover it" in system
+
+
 # --------------------------------------------------------------------------- the answer format
 
 
