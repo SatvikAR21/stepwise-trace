@@ -2,7 +2,8 @@
 
 The judge receives a "case file" built from the trace: the original document once, then what each
 step was given and what it produced (or, for a step that crashed, its raw answers and the error).
-It never sees the steps' self-reported confidence, so its verdict is independent of it.
+The steps' self-reported confidence is kept out of their recorded outputs, so the judge is not
+shown it (a crashed step's raw answers are shown exactly as they came back).
 """
 
 from __future__ import annotations

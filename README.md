@@ -25,7 +25,8 @@ first step that went wrong.
     checks run alongside as a second opinion. Diagnoses are saved, served by the API, and graded
     against the corpus answer key with a report card (measured results below). Any recorded run
     can be resumed from any step.
-- Next: visual trace explorer, feedback-to-eval loop.
+- Next: fault injection (known faults planted in step outputs, a more independent test of the
+  root-cause analysis), visual trace explorer, feedback-to-eval loop.
 
 **Stack:** Python 3.12 · FastAPI · Pydantic v2 · SQLAlchemy + SQLite · structlog · uv · ruff ·
 mypy (strict) · pytest · pre-commit
