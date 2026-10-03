@@ -37,9 +37,11 @@ def build_judge_client(
     """Return the judge's client: scripted verdicts for ``JUDGE_PROVIDER=mock``, else a real one.
 
     The real judge makes no hidden SDK retries by default (``JUDGE_MAX_RETRIES=0``) and is
-    throttled to ``JUDGE_MAX_RPM``. If it would call the same real model at the same endpoint with
-    the same key as ``pipeline_client``, that client is returned instead, so both share one rate
-    limiter and cannot exceed the provider's per-model quota together.
+    throttled to ``JUDGE_MAX_RPM``; its throttle never resends a refused request either, so every
+    request is one the caller counted. If it would call the same real model at the same endpoint
+    with the same key as ``pipeline_client``, that client is returned instead, so both share one
+    rate limiter and cannot exceed the provider's per-model quota together; the pipeline client's
+    retry settings then apply.
     """
     if settings.judge_provider is LLMProvider.MOCK:
         return MockLLMClient(scripts_dir=settings.data_dir / MOCK_JUDGE_SUBDIR)
@@ -53,7 +55,9 @@ def build_judge_client(
         max_retries=settings.judge_max_retries,
     )
     if settings.judge_max_rpm > 0:
-        client = ThrottledLLMClient(client, max_rpm=settings.judge_max_rpm)
+        client = ThrottledLLMClient(
+            client, max_rpm=settings.judge_max_rpm, max_rate_limit_retries=0
+        )
     return client
 
 

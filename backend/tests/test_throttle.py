@@ -188,6 +188,19 @@ def test_gives_up_after_the_allowed_rate_limit_retries() -> None:
     assert inner.calls == 3
 
 
+def test_zero_rate_limit_retries_raise_the_first_refusal_without_waiting() -> None:
+    clock = FakeClock()
+    inner = ScriptedClient(_rate_limited(retry_after_s=1), OK)
+
+    with pytest.raises(LLMProviderError):
+        ThrottledLLMClient(
+            inner, max_rpm=100, max_rate_limit_retries=0, clock=clock, sleep=clock.sleep
+        ).complete(REQUEST)
+
+    assert inner.calls == 1
+    assert clock.sleeps == []
+
+
 def test_other_provider_errors_are_not_retried() -> None:
     clock = FakeClock()
     inner = ScriptedClient(LLMProviderError("AuthenticationError", status_code=401), OK)

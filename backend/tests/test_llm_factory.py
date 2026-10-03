@@ -73,6 +73,7 @@ def test_real_judge_reuses_the_llm_key_and_url_is_throttled_and_never_retries_si
 
     assert isinstance(judge, ThrottledLLMClient)
     assert judge._max_rpm == 4
+    assert judge._max_rate_limit_retries == 0  # a refused request is never sent again
     inner = judge._inner
     assert isinstance(inner, OpenAICompatibleClient)
     assert inner.model_name == "gemini-3.8-flash"
