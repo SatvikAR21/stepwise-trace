@@ -43,7 +43,7 @@ class Outcome(StrEnum):
     MISSED = "missed"  # a planted failure, but no root cause named
     HEALTHY_OK = "healthy-ok"  # a healthy document with no root cause named
     FALSE_ALARM = "false-alarm"  # a healthy document that was blamed anyway
-    NOT_JUDGED = "not-judged"  # call limit reached, or the judge's answer stayed unusable
+    NOT_JUDGED = "not-judged"  # call limit, provider failure, unusable answer, or run stopped
 
 
 class StopReason(StrEnum):
@@ -181,7 +181,7 @@ def evaluate_corpus(
     return EvaluationReport(
         started_at=started,
         finished_at=datetime.now(UTC),
-        splits=sorted({entry.split for entry in entries}),
+        splits=[split for split in CorpusSplit if any(e.split is split for e in entries)],
         judge_model=judge.model_name,
         judge_prompt_version=TRACE_JUDGE_PROMPT.version,
         scripted_judge=judge.model_name == MOCK_MODEL_NAME,

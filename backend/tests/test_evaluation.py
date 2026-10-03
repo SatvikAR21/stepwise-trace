@@ -240,6 +240,17 @@ def test_reports_are_saved_with_a_timestamped_name(
     assert EvaluationReport.model_validate_json(path.read_text(encoding="utf-8")) == report
 
 
+def test_a_report_on_both_sets_lists_practice_before_exam(
+    stores: tuple[TraceStore, AnalysisStore], tmp_path: Path
+) -> None:
+    entries = [MANIFEST.get("report_growth_rate_31"), MANIFEST.get("invoice_simple_06")]
+
+    report = _evaluate(entries, MockLLMClient(scripts_dir=DATA_DIR / "mock_judge"), stores)
+
+    assert report.splits == [CorpusSplit.PRACTICE, CorpusSplit.EXAM]
+    assert save_report(report, tmp_path / "evaluations").name.endswith("-practice-exam.json")
+
+
 def test_the_judge_request_names_the_document(stores: tuple[TraceStore, AnalysisStore]) -> None:
     judge = MockLLMClient(scripts_dir=DATA_DIR / "mock_judge")
 
